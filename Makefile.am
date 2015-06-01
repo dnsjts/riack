@@ -22,26 +22,36 @@ lib_libriack_la_LDFLAGS		= \
 	${PROTOBUF_C_LIBS}	  \
 	${GNUTLS_LIBS}		  \
 	-version-info ${LRC_CURRENT}:${LRC_REVISION}:${LRC_AGE}
-proto_files			= \
+riak_proto_files		= \
 	lib/riack/proto/riak.pb-c.c  \
 	lib/riack/proto/riak.pb-c.h
+riak_kv_proto_files		= \
+	lib/riack/proto/riak_kv.pb-c.c  \
+	lib/riack/proto/riak_kv.pb-c.h
 nodist_proto_HEADERS		= \
-	lib/riack/proto/riak.pb-c.h
+	lib/riack/proto/riak.pb-c.h \
+	lib/riack/proto/riak_kv.pb-c.h
 pkginclude_HEADERS		= \
 	lib/riack/client.h	  \
+	lib/riack/content.h	  \
 	lib/riack/riack.h
 lib_libriack_la_SOURCES		= \
-	lib/riack/client.c
-$(am_lib_libriack_la_OBJECTS): ${proto_files}
+	lib/riack/client.c	  \
+	lib/riack/content.c
+$(am_lib_libriack_la_OBJECTS): ${riak_proto_files} ${riak_kv_proto_files}
 noinst_HEADERS			= \
 	lib/riack/_private.h
 
 nodist_lib_libriack_la_SOURCES	= \
-	${proto_files}
+	${riak_proto_files} ${riak_kv_proto_files}
 
-CLEANFILES			= ${proto_files}
+CLEANFILES			= ${riak_proto_files} ${riak_kv_proto_files}
 
-${proto_files}: ${top_srcdir}/ext/riak_pb/src/riak.proto
+${riak_proto_files}: ${top_srcdir}/ext/riak_pb/src/riak.proto
+	${AM_V_at} ${mkinstalldirs} ${top_builddir}/lib/riack/proto
+	${AM_V_GEN} protoc-c $^ -I${top_srcdir}/ext/riak_pb/src --c_out=${top_builddir}/lib/riack/proto
+
+${riak_kv_proto_files}: ${top_srcdir}/ext/riak_pb/src/riak_kv.proto
 	${AM_V_at} ${mkinstalldirs} ${top_builddir}/lib/riack/proto
 	${AM_V_GEN} protoc-c $^ -I${top_srcdir}/ext/riak_pb/src --c_out=${top_builddir}/lib/riack/proto
 
@@ -70,6 +80,7 @@ check_libriack_srcs		= \
 	tests/tests.h		  \
 	tests/check_library.c	  \
 	tests/check_client.c	  \
+	tests/check_content.c	  \
 	tests/check_libriemann.c
 
 # -- Extra files to distribute --

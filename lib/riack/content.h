@@ -16,24 +16,46 @@
  * License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** @file lib/riack/riack.h
- * The main entry point of the riack API.
+/** @file lib/riack/content.h
  */
 
-#ifndef __RIACK_RIACK_H__
-#define __RIACK_RIACK_H__
-
-#include <errno.h>
-
-#include <riack/client.h>
-#include <riack/content.h>
-
-/** @mainpage
+/** @defgroup riack_content Riak RpbContent
  *
- * @section manual_intro Introduction
  *
- * ...documentation comes here...
- *
+ * @addtogroup riack_content
+ * @{
  */
+
+#ifndef __RIACK_CONTENT_H__
+#define __RIACK_CONTENT_H__
+
+#include <riack/proto/riak_kv.pb-c.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef RpbContent riack_content_t;
+
+typedef enum
+  {
+    RIACK_CONTENT_FIELD_NONE,
+    RIACK_CONTENT_FIELD_VALUE,
+    RIACK_CONTENT_FIELD_CONTENT_TYPE,
+    RIACK_CONTENT_FIELD_CONTENT_ENCODING,
+    RIACK_CONTENT_FIELD_CHARSET
+  } riack_content_field_t;
+
+riack_content_t *riack_content_new (void);
+void riack_content_free (riack_content_t *content);
+
+int riack_content_set (riack_content_t *content,
+                       riack_content_field_t field, ...);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+/** @} */
 
 #endif

@@ -16,24 +16,20 @@
  * License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** @file lib/riack/riack.h
- * The main entry point of the riack API.
- */
-
-#ifndef __RIACK_RIACK_H__
-#define __RIACK_RIACK_H__
-
-#include <errno.h>
-
-#include <riack/client.h>
 #include <riack/content.h>
 
-/** @mainpage
- *
- * @section manual_intro Introduction
- *
- * ...documentation comes here...
- *
- */
+riack_content_t *
+riack_content_new (void)
+{
+}
 
-#endif
+void
+riack_content_free (riack_content_t *content)
+{
+}
+
+int
+riack_content_set (riack_content_t *content,
+                   riack_content_field_t field, ...)
+{
+}
