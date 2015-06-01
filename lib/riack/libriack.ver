@@ -1,0 +1,9 @@
+RIACK_LOCAL {
+local:
+        *;
+};
+
+RIACK_1.0 {
+	riack_version;
+	riack_version_string;
+} RIACK_LOCAL;
