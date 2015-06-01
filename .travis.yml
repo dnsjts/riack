@@ -1,10 +1,8 @@
 language: c
+services:
+  - riak
 before_install:
   - sudo pip install cpp-coveralls
-  - wget http://s3.amazonaws.com/downloads.basho.com/riak/2.1/2.1.1/debian/7/riak_2.1.1-1_amd64.deb
-  - sudo dpkg -i riak*deb
-  - sudo service riak stop
-  - sudo service riak start
 install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq check protobuf-c-compiler libprotobuf-c0-dev
