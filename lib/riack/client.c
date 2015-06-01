@@ -19,6 +19,17 @@
 #include "riack/platform.h"
 
 #include <riack/client.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <netdb.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <stdarg.h>
+#include <arpa/inet.h>
 
 const char *
 riack_version (void)
@@ -35,19 +46,103 @@ riack_version_string (void)
 riack_client_t *
 riack_client_new (void)
 {
+  riack_client_t* client = (riack_client_t*)malloc(sizeof(riack_client_t));
+
+  return client;
+
 }
 
 int
 riack_client_free (riack_client_t *client)
 {
+  if (client == NULL)
+    return -EINVAL;
+  if (!client->fd ) {
+    free(client);
+    return -ENOTCONN;
+    }
+  else {
+    free(client);
+    return 0;
+    }
 }
 
 int
 riack_client_connect (riack_client_t *client, ...)
 {
+  int err_check, flag;
+  va_list args;
+  char *hostname;
+  char *port;
+  struct addrinfo server, *serverinfo, *p;
+  memset(&server, 0, sizeof(server));
+  server.ai_family = AF_UNSPEC;
+  server.ai_socktype = SOCK_STREAM;
+  va_start(args, client);
+  while ( flag = va_arg(args, int) != 0)
+  {
+    if (flag == 1) {
+      hostname = va_arg(args, char *);
+      if ((err_check = getaddrinfo(hostname, "8087", &server, &serverinfo)) != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err_check));
+        return -EINVAL;
+       }
+    }
+    else if (flag == 2) {
+      sprintf(port, "%d", va_arg(args, int));
+      if ((err_check = getaddrinfo("127.0.0.1", port, &server, &serverinfo)) != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err_check));
+        return -EINVAL;
+        }
+     }
+   }
+  if (!flag) {
+    if ((err_check = getaddrinfo("127.0.0.1", "8087", &server, &serverinfo)) != 0) {
+    fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err_check));
+    return -errno;
+    }
+  }
+  // looping through all the results and connect to the first we can
+  for(p = serverinfo; p != NULL; p = p->ai_next) {
+    if ((client->fd = socket(p->ai_family, p->ai_socktype,
+            p->ai_protocol)) == -1) {
+        perror("socket");
+        continue;
+    }
+
+    if (connect(client->fd, p->ai_addr, p->ai_addrlen) == -1) {
+        close(client->fd);
+        perror("connect");
+        continue;
+    }
+
+    break; // if we get here, we must have connected successfully
+  }
+
+  if (p == NULL) {
+    // looped off the end of the list with no connection
+    fprintf(stderr, "failed to connect\n");
+    return -errno;
+}
+
+freeaddrinfo(serverinfo); // all done with this structure
+  
 }
 
 int
 riack_client_disconnect (riack_client_t *client)
 {
+  int rval;
+  if (!client->fd )
+    return -ENOTCONN;
+
+
+  if(rval=shutdown(client->fd, 2) !=0)
+    return -errno;
+  else
+    return rval;
+
+  
 }
+
+

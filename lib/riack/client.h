@@ -74,7 +74,10 @@ extern "C" {
  *
  * This is an opaque class, the internal state of the Riak client.
  */
-typedef struct _riack_client_t riack_client_t;
+typedef struct _riack_client_t
+{
+int fd;
+} riack_client_t;
 
 /** Return the library version.
  *
