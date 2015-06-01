@@ -41,3 +41,13 @@ int
 riack_client_free (riack_client_t *client)
 {
 }
+
+int
+riack_client_connect (riack_client_t *client, ...)
+{
+}
+
+int
+riack_client_disconnect (riack_client_t *client)
+{
+}

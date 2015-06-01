@@ -29,6 +29,43 @@
 #ifndef __RIACK_CLIENT_H__
 #define __RIACK_CLIENT_H__
 
+/** Riak connect options.
+ *
+ * When using riak_client_connect(), optional settings can be
+ * specified by listing a number of key-value pairs. These are the
+ * supported keys, see each of them for more information about what
+ * kind of values they expect.
+ *
+ * The list must be terminated with RIACK_CONNECT_OPTION_NONE.
+ */
+typedef enum
+  {
+    /** The terminating option.
+     * This must be used as the last option passed to
+     * riack_client_connect(), to terminate the list of additional
+     * options.
+     *
+     * It takes no value.
+     */
+    RIACK_CONNECT_OPTION_NONE,
+
+    /** The host to connect to.
+     * By default, the library will try to connect to 127.0.0.1. To
+     * change the host, use this option.
+     *
+     * The option takes a string (const char *).
+     */
+    RIACK_CONNECT_OPTION_HOST,
+
+    /** The port to connect to.
+     * By default, the library will use port 8087. To change this, use
+     * this option.
+     *
+     * The option takes an int.
+     */
+    RIACK_CONNECT_OPTION_PORT,
+  } riack_connect_option_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -73,6 +110,28 @@ riack_client_t *riack_client_new (void);
  * @note The object will be freed even in case of non-fatal errors.
  */
 int riack_client_free (riack_client_t *client);
+
+/** Connect a client to a server.
+ *
+ * @param client is the client to connect.
+ * @param ... are optional settings, see #riack_connect_option_t.
+ *
+ * @retval 0 is returned on success.
+ * @retval -EINVAL is returned if any arguments are invalid.
+ * @retval -errno is returned for any errors that may arise during the
+ * connect aempt.
+ */
+int riack_client_connect (riack_client_t *client, ...);
+
+/** Disconnect a client from the server.
+ *
+ * @param client is the client to disconnect.
+ *
+ * @retval 0 is returned on success.
+ * @retval -ENOTCONN is returned if client is NULL or disconnected.
+ * @retval -errno is returned if `close()` fails.
+ */
+int riack_client_disconnect (riack_client_t *client);
 
 #ifdef __cplusplus
 } /* extern "C" */

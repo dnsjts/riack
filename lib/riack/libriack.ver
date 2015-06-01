@@ -9,4 +9,6 @@ RIACK_1.0 {
 
         riack_client_new;
         riack_client_free;
+        riack_client_connect;
+        riack_client_disconnect;
 } RIACK_LOCAL;
