@@ -18,6 +18,8 @@
 
 #include "riack/platform.h"
 
+#include <riack/client.h>
+
 const char *
 riack_version (void)
 {
@@ -28,4 +30,14 @@ const char *
 riack_version_string (void)
 {
   return PACKAGE_STRING;
+}
+
+riack_client_t *
+riack_client_new (void)
+{
+}
+
+int
+riack_client_free (riack_client_t *client)
+{
 }

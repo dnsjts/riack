@@ -69,6 +69,7 @@ endif
 check_libriack_srcs		= \
 	tests/tests.h		  \
 	tests/check_library.c	  \
+	tests/check_client.c	  \
 	tests/check_libriemann.c
 
 # -- Extra files to distribute --

@@ -33,8 +33,46 @@
 extern "C" {
 #endif
 
+/** The Riak client object.
+ *
+ * This is an opaque class, the internal state of the Riak client.
+ */
+typedef struct _riack_client_t riack_client_t;
+
+/** Return the library version.
+ *
+ * @returns the compiled-in library version as a string.
+ */
 const char *riack_version (void);
+/** Return the library name and version.
+ *
+ * @returns the compiled-in library name and version, as a string.
+ */
 const char *riack_version_string (void);
+
+/** Allocate a new, unconnected client.
+ *
+ * Use riack_client_connect() to connect the newly created client to a
+ * server.
+ *
+ * @returns a newly allocated riack_client_t object, which must be
+ * freed with riack_client_free() once no longer needed.
+ */
+riack_client_t *riack_client_new (void);
+
+/** Free a Riak client object.
+ *
+ * Disconnects and frees up the supplied client.
+ *
+ * @param client is the client object to free up.
+ *
+ * @retval -EINVAL if client is NULL.
+ * @retval -ENOTCONN if the client was not connected.
+ * @retval 0 on success.
+ *
+ * @note The object will be freed even in case of non-fatal errors.
+ */
+int riack_client_free (riack_client_t *client);
 
 #ifdef __cplusplus
 } /* extern "C" */

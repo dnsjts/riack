@@ -6,4 +6,7 @@ local:
 RIACK_1.0 {
 	riack_version;
 	riack_version_string;
+
+        riack_client_new;
+        riack_client_free;
 } RIACK_LOCAL;

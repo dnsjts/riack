@@ -19,4 +19,8 @@
 #ifndef __RIACK_PRIVATE_H__
 #define __RIACK_PRIVATE_H__ 1
 
+struct riack_client_t
+{
+};
+
 #endif
