@@ -38,7 +38,13 @@ riack_content_new (void)
 void
 riack_content_free (riack_content_t *content)
 {
+  free(content->value.data);
+  
+  free(content->content_type.data);
+  free(content->content_encoding.data);
+  free(content->charset.data);
   free(content);
+  
 }
 
 int
