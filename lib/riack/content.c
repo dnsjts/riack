@@ -53,7 +53,7 @@ riack_content_set (riack_content_t *content, ...)
   char *cont_encod;
   char *charset;
   va_start(args, content);
-  while (flag = va_arg(args, int) != 0)
+  while ((flag = va_arg(args, int)) != 0)
   {
     
     switch (flag) {
