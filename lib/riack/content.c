@@ -38,12 +38,9 @@ riack_content_new (void)
 void
 riack_content_free (riack_content_t *content)
 {
-  free(content->value.data);
   
-  free(content->content_type.data);
-  free(content->content_encoding.data);
-  free(content->charset.data);
-  free(content);
+  rpb_content__free_unpacked(content,NULL);
+  
   
 }
 
@@ -67,20 +64,24 @@ riack_content_set (riack_content_t *content, ...)
         break;
     case (RIACK_CONTENT_FIELD_VALUE):
       val = (char *)va_arg(args, char *);
+      free(content->value.data);
       content->value.data = strdup(val);
       content->value.len = strlen(val);
       break;
     case (RIACK_CONTENT_FIELD_CONTENT_TYPE):
+      free(content->content_type.data);
       cont_type = (char *)va_arg(args, char *);
       content->content_type.data = strdup(cont_type);
       content->content_type.len = strlen(cont_type);
       break;
     case (RIACK_CONTENT_FIELD_CONTENT_ENCODING):
+      free(content->content_encoding.data);
       cont_encod = (char *)va_arg(args, char *);
       content->content_encoding.data = strdup(cont_encod);
       content->content_encoding.len = strlen(cont_encod);
       break;
     case (RIACK_CONTENT_FIELD_CHARSET):
+      free(content->charset.data);
       charset = (char *)va_arg(args, char *);
       content->charset.data = strdup(charset);
       content->charset.len = strlen(charset);
