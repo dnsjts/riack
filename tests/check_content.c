@@ -50,6 +50,21 @@ START_TEST (test_riack_content_set)
   ck_assert_str_eq (content->content_encoding.data, "yes");
   ck_assert_str_eq (content->charset.data, "utf32");
 
+  ck_assert_errno
+    (riack_content_set (content,
+                        RIACK_CONTENT_FIELD_VALUE, NULL, -1,
+                        RIACK_CONTENT_FIELD_NONE),
+     0);
+
+  ck_assert (content->value.data == NULL);
+  ck_assert_int_eq (content->value.len, 0);
+
+  ck_assert_errno
+    (riack_content_set (content,
+                        RIACK_CONTENT_FIELD_VALUE, "hello world!", 3,
+                        RIACK_CONTENT_FIELD_NONE),
+     0);
+  ck_assert_str_eq (content->value.data, "hel");
 
   riack_content_free (content);
   
