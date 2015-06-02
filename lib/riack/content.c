@@ -53,8 +53,11 @@ riack_content_set (riack_content_t *content, ...)
   int flag; 
   char *val;
   char *cont_type;
+  
   char *cont_encod;
   char *charset;
+  int length;
+  
   va_start(args, content);
   while ((flag = va_arg(args, int)) != 0)
   {
@@ -64,9 +67,25 @@ riack_content_set (riack_content_t *content, ...)
         break;
     case (RIACK_CONTENT_FIELD_VALUE):
       val = (char *)va_arg(args, char *);
-      free(content->value.data);
-      content->value.data = strdup(val);
-      content->value.len = strlen(val);
+      
+      if ((val != NULL) && ((length = va_arg(args, int)) > 0)) {
+        char sub_val[length+1];
+        strncpy(sub_val, val, length);
+        sub_val[length] ='\0';
+        free(content->value.data);
+        content->value.data = strdup(sub_val);
+        content->value.len = length;
+        }
+      else if (val == NULL){
+        free(content->value.data);
+        content->value.data = NULL;
+        content->value.len = 0;
+        }
+      else {
+        free(content->value.data);
+        content->value.data = strdup(val);
+        content->value.len = strlen(val);
+        }
       break;
     case (RIACK_CONTENT_FIELD_CONTENT_TYPE):
       free(content->content_type.data);
