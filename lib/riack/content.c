@@ -28,9 +28,10 @@ riack_content_t *
 riack_content_new (void)
 {
 
-  riack_content_t *content;
-  content =(riack_content_t*)malloc(sizeof(riack_content_t));
-
+  riack_content_t *content = (riack_content_t *)malloc(sizeof(riack_content_t));
+  rpb_content__init(content);
+  
+  
   return content;
 }
 
@@ -55,23 +56,23 @@ riack_content_set (riack_content_t *content, ...)
       continue;
     if (flag == 1) {
       sprintf(val, "%s",va_arg(args, char *));
-      content.value.data = strdup(val);
-      content.value.len = strlen(val);
+      content->value.data = strdup(val);
+      content->value.len = strlen(val);
       }
     else if (flag == 2) {
       sprintf(val, "%s",va_arg(args, char *));
-      content.content_type.data = strdup(val);
-      content.content_type.len = strlen(val);
+      content->content_type.data = strdup(val);
+      content->content_type.len = strlen(val);
       }
     else if (flag == 3) {
       sprintf(val, "%s",va_arg(args, char *));
-      content.content_encoding.data = strdup(val);
-      content.content_encoding.len = strlen(val);
+      content->content_encoding.data = strdup(val);
+      content->content_encoding.len = strlen(val);
       }
     else if (flag == 4) {
       sprintf(val, "%s",va_arg(args, char *));
-      content.charset.data = strdup(val);
-      content.charset.len = strlen(val);
+      content->charset.data = strdup(val);
+      content->charset.len = strlen(val);
       }
   }
   if(flag == 0)
