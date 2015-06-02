@@ -46,7 +46,8 @@ riack_version_string (void)
 riack_client_t *
 riack_client_new (void)
 {
-  riack_client_t* client = (riack_client_t*)malloc(sizeof(riack_client_t));
+  riack_client_t *client = (riack_client_t *)malloc(sizeof(riack_client_t));
+  client->conn = 0;
 
   return client;
 
@@ -57,7 +58,7 @@ riack_client_free (riack_client_t *client)
 {
   if (client == NULL)
     return -EINVAL;
-  if (!client->fd ) {
+  if (!client->conn ) {
     free(client);
     return -ENOTCONN;
     }
@@ -115,7 +116,7 @@ riack_client_connect (riack_client_t *client, ...)
         perror("connect");
         continue;
     }
-
+    client->conn =1;
     break; // if we get here, we must have connected successfully
   }
 
@@ -133,15 +134,18 @@ int
 riack_client_disconnect (riack_client_t *client)
 {
   int rval;
-  if (!client->fd )
+  if (client== NULL || client->conn == 0)
     return -ENOTCONN;
 
 
-  if(rval=shutdown(client->fd, 2) !=0)
+  if(rval=shutdown(client->fd, 2) !=0) {
+    
     return -errno;
-  else
+    }
+  else {
     return rval;
-
+    client->conn = 0;
+  }
   
 }
 

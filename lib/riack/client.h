@@ -77,6 +77,7 @@ extern "C" {
 typedef struct _riack_client_t
 {
 int fd;
+int conn;
 } riack_client_t;
 
 /** Return the library version.
