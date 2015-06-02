@@ -82,14 +82,14 @@ riack_client_connect (riack_client_t *client, ...)
   va_start(args, client);
   while ( flag = va_arg(args, int) != 0)
   {
-    if (flag == 1) {
+    if (flag == RIACK_CONNECT_OPTION_HOST) {
       hostname = va_arg(args, char *);
       if ((err_check = getaddrinfo(hostname, "8087", &server, &serverinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err_check));
         return -EINVAL;
        }
     }
-    else if (flag == 2) {
+    else if (flag == RIACK_CONNECT_OPTION_PORT) {
       sprintf(port, "%d", va_arg(args, int));
       if ((err_check = getaddrinfo("127.0.0.1", port, &server, &serverinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err_check));
@@ -97,7 +97,7 @@ riack_client_connect (riack_client_t *client, ...)
         }
      }
    }
-  if (!flag) {
+  if (flag == RIACK_CONNECT_OPTION_HOST) {
     if ((err_check = getaddrinfo("127.0.0.1", "8087", &server, &serverinfo)) != 0) {
     fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err_check));
     return -errno;

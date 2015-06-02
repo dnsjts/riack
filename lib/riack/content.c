@@ -28,7 +28,7 @@ riack_content_t *
 riack_content_new (void)
 {
 
-  riack_content_t *content = (riack_content_t *)malloc(sizeof(riack_content_t));
+  riack_content_t *content = (riack_content_t*)malloc(sizeof(riack_content_t));
   rpb_content__init(content);
   
   
@@ -47,35 +47,41 @@ riack_content_set (riack_content_t *content, ...)
   va_list args;
   if (content == NULL)
     return -EINVAL;
-  int flag;  
+  int flag; 
+  char *val;
+  char *cont_type;
+  char *cont_encod;
+  char *charset;
   va_start(args, content);
   while (flag = va_arg(args, int) != 0)
   {
-    char *val = "";
-    if (flag == -1)
-      continue;
-    if (flag == 1) {
-      sprintf(val, "%s",va_arg(args, char *));
+    
+    switch (flag) {
+      case(-1) :
+        break;
+    case (RIACK_CONTENT_FIELD_VALUE):
+      val = (char *)va_arg(args, char *);
       content->value.data = strdup(val);
       content->value.len = strlen(val);
-      }
-    else if (flag == 2) {
-      sprintf(val, "%s",va_arg(args, char *));
-      content->content_type.data = strdup(val);
-      content->content_type.len = strlen(val);
-      }
-    else if (flag == 3) {
-      sprintf(val, "%s",va_arg(args, char *));
-      content->content_encoding.data = strdup(val);
-      content->content_encoding.len = strlen(val);
-      }
-    else if (flag == 4) {
-      sprintf(val, "%s",va_arg(args, char *));
-      content->charset.data = strdup(val);
-      content->charset.len = strlen(val);
-      }
+      break;
+    case (RIACK_CONTENT_FIELD_CONTENT_TYPE):
+      cont_type = (char *)va_arg(args, char *);
+      content->content_type.data = strdup(cont_type);
+      content->content_type.len = strlen(cont_type);
+      break;
+    case (RIACK_CONTENT_FIELD_CONTENT_ENCODING):
+      cont_encod = (char *)va_arg(args, char *);
+      content->content_encoding.data = strdup(cont_encod);
+      content->content_encoding.len = strlen(cont_encod);
+      break;
+    case (RIACK_CONTENT_FIELD_CHARSET):
+      charset = (char *)va_arg(args, char *);
+      content->charset.data = strdup(charset);
+      content->charset.len = strlen(charset);
+      break;
+     }
   }
-  if(flag == 0)
+  if(flag == RIACK_CONTENT_FIELD_NONE)
     return 0;
      
 
