@@ -49,8 +49,7 @@ typedef enum
 riack_content_t *riack_content_new (void);
 void riack_content_free (riack_content_t *content);
 
-int riack_content_set (riack_content_t *content,
-                       riack_content_field_t field, ...);
+int riack_content_set (riack_content_t *content, ...);
 
 #ifdef __cplusplus
 } /* extern "C" */

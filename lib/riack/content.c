@@ -17,19 +17,68 @@
  */
 
 #include <riack/content.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+#include <errno.h>
+
 
 riack_content_t *
 riack_content_new (void)
 {
+
+  riack_content_t *content;
+  content =(riack_content_t*)malloc(sizeof(riack_content_t));
+
+  return content;
 }
 
 void
 riack_content_free (riack_content_t *content)
 {
+  free(content);
 }
 
 int
-riack_content_set (riack_content_t *content,
-                   riack_content_field_t field, ...)
+riack_content_set (riack_content_t *content, ...)
 {
+  va_list args;
+  if (content == NULL)
+    return -EINVAL;
+  int flag;  
+  va_start(args, content);
+  while (flag = va_arg(args, int) != 0)
+  {
+    char *val = "";
+    if (flag == -1)
+      continue;
+    if (flag == 1) {
+      sprintf(val, "%s",va_arg(args, char *));
+      content.value.data = strdup(val);
+      content.value.len = strlen(val);
+      }
+    else if (flag == 2) {
+      sprintf(val, "%s",va_arg(args, char *));
+      content.content_type.data = strdup(val);
+      content.content_type.len = strlen(val);
+      }
+    else if (flag == 3) {
+      sprintf(val, "%s",va_arg(args, char *));
+      content.content_encoding.data = strdup(val);
+      content.content_encoding.len = strlen(val);
+      }
+    else if (flag == 4) {
+      sprintf(val, "%s",va_arg(args, char *));
+      content.charset.data = strdup(val);
+      content.charset.len = strlen(val);
+      }
+  }
+  if(flag == 0)
+    return 0;
+     
+
+
+
+
 }
