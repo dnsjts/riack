@@ -80,10 +80,10 @@ riack_client_connect (riack_client_t *client, ...)
   server.ai_family = AF_UNSPEC;
   server.ai_socktype = SOCK_STREAM;
   va_start(args, client);
-  while ( flag = va_arg(args, int) != 0)
+  while ( (flag = va_arg(args, int)) != 0)
   {
     if (flag == RIACK_CONNECT_OPTION_HOST) {
-      hostname = va_arg(args, char *);
+      hostname = (char *)va_arg(args, char *);
       if ((err_check = getaddrinfo(hostname, "8087", &server, &serverinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err_check));
         return -EINVAL;
