@@ -16,25 +16,46 @@
  * License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** @file lib/riack/riack.h
- * The main entry point of the riack API.
+/** @file lib/riack/putreq.h
  */
 
-#ifndef __RIACK_RIACK_H__
-#define __RIACK_RIACK_H__
+/** @defgroup riack_putreq Riak RpbPutReq
+ *
+ *
+ * @addtogroup riack_putreq
+ * @{
+ */
 
-#include <errno.h>
+#ifndef __RIACK_CONTENT_H__
+#define __RIACK_CONTENT_H__
 
-#include <riack/client.h>
+#include <riack/proto/riak_kv.pb-c.h>
 #include <riack/content.h>
-#include <riack/putreq.h>
 
-/** @mainpage
- *
- * @section manual_intro Introduction
- *
- * ...documentation comes here...
- *
- */
+#ifdef __cplusplus
+extern "C" {
+#endif
+typedef RpbContent riack_content_t;
+typedef RpbPutReq riack_put_req_t;
+
+typedef enum
+  {
+    RIACK_REQ_PUT_FIELD_NONE,
+    RIACK_REQ_PUT_FIELD_BUCKET,
+    RIACK_REQ_PUT_FIELD_BUCKET_TYPE,
+    RIACK_REQ_PUT_FIELD_KEY,
+    RIACK_REQ_PUT_FIELD_CONTENT,
+  } riack_req_put_field_t;
+
+riack_put_req_t *riack_req_put_new (void);
+void riack_req_put_free (riack_put_req_t *putreq);
+
+int riack_req_put_set (riack_put_req_t *putreq, riack_req_put_field_t RIACK_REQ_PUT_FIELD_BUCKET_TYPE, ...);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+/** @} */
 
 #endif

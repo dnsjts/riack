@@ -34,10 +34,12 @@ nodist_proto_HEADERS		= \
 pkginclude_HEADERS		= \
 	lib/riack/client.h	  \
 	lib/riack/content.h	  \
-	lib/riack/riack.h
+	lib/riack/riack.h   \
+	lib/riack/putreq.h
 lib_libriack_la_SOURCES		= \
 	lib/riack/client.c	  \
-	lib/riack/content.c
+	lib/riack/content.c    \
+	lib/riack/putreq.c
 $(am_lib_libriack_la_OBJECTS): ${riak_proto_files} ${riak_kv_proto_files}
 noinst_HEADERS			= \
 	lib/riack/_private.h
@@ -81,7 +83,8 @@ check_libriack_srcs		= \
 	tests/check_library.c	  \
 	tests/check_client.c	  \
 	tests/check_content.c	  \
-	tests/check_libriemann.c
+	tests/check_libriemann.c    \
+	tests/check_putreq.c
 
 # -- Extra files to distribute --
 EXTRA_DIST			= README.md NEWS.md GPL LGPL \
