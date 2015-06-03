@@ -51,6 +51,7 @@ network_tests_enabled (void)
 #include "check_library.c"
 #include "check_client.c"
 #include "check_content.c"
+#include "check_putreq.c"
 
 int
 main (void)
@@ -65,6 +66,7 @@ main (void)
   suite_add_tcase (suite, test_riack_library ());
   suite_add_tcase (suite, test_riack_client ());
   suite_add_tcase (suite, test_riack_content ());
+  suite_add_tcase (suite, test_riack_putreq ());
 
   runner = srunner_create (suite);
 
