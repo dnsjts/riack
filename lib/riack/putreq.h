@@ -30,7 +30,6 @@
 #define __RIACK_CONTENT_H__
 
 #include <riack/proto/riak_kv.pb-c.h>
-#include <riack/content.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -83,7 +83,7 @@ check_libriack_srcs		= \
 	tests/check_library.c	  \
 	tests/check_client.c	  \
 	tests/check_content.c	  \
-	tests/check_libriemann.c    \
+	tests/check_libriack.c    \
 	tests/check_putreq.c
 
 # -- Extra files to distribute --

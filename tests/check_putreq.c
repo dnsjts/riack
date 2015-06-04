@@ -37,7 +37,7 @@ START_TEST (test_riack_putreq_set)
                          RIACK_REQ_PUT_FIELD_BUCKET, "new-bucket",
                          RIACK_REQ_PUT_FIELD_BUCKET_TYPE, "set",
                          RIACK_REQ_PUT_FIELD_KEY, "030620151900",
-                         RIACK_REQ_PUT_FIELD_CONTENT, content
+                         RIACK_REQ_PUT_FIELD_CONTENT, content,
                          RIACK_REQ_PUT_FIELD_NONE),
                          0);
 
@@ -48,7 +48,7 @@ START_TEST (test_riack_putreq_set)
   ck_assert_str_eq (putreq->content->value.data, "some-value");
   ck_assert_str_eq (putreq->content->content_type.data, "text/plain");
   ck_assert_str_eq (putreq->content->content_encoding.data, "none");
-  ck_assert_str_eq (putreq->content->charset.data, "utf");
+  ck_assert_str_eq (putreq->content->charset.data, "utf8");
   
  
 
