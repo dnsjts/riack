@@ -25,9 +25,12 @@
  * @addtogroup riack_client
  * @{
  */
+#include <riack/proto/riak_kv.pb-c.h>
 
 #ifndef __RIACK_CLIENT_H__
 #define __RIACK_CLIENT_H__
+
+typedef RpbPutReq riack_put_req_t;
 
 /** Riak connect options.
  *
@@ -65,6 +68,16 @@ typedef enum
      */
     RIACK_CONNECT_OPTION_PORT,
   } riack_connect_option_t;
+  
+  
+typedef enum
+  {
+    /** The client would use this option to send a RpbPutReq requst
+     * To be used as a second argument in riack_client_send function
+     */
+    RIAK_MESSAGE_PUTREQ
+   }riack_client_send_option_t;
+    
 
 #ifdef __cplusplus
 extern "C" {
@@ -136,6 +149,16 @@ int riack_client_connect (riack_client_t *client, ...);
  * @retval -errno is returned if `close()` fails.
  */
 int riack_client_disconnect (riack_client_t *client);
+
+/** Send a request from the client 
+ * @param client is the client connected to the riack node
+ * @param option is the request you want to send through the client
+ * @param putreq is a RpbPutReq structure filled by riack_req_put_set function.
+ * 
+ * @retval 0 is returned on success
+ * @retval -errno for internal error
+ */
+int riack_client_send (riack_client_t *client, riack_client_send_option_t option, riack_put_req_t *putreq);
 
 #ifdef __cplusplus
 } /* extern "C" */

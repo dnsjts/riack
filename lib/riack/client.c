@@ -150,3 +150,20 @@ riack_client_disconnect (riack_client_t *client)
 }
 
 
+int
+riack_client_send (riack_client_t *client, riack_client_send_option_t option, riack_put_req_t *putreq)
+{
+  void *buffer; //buffer to store serialised data
+  unsigned length; //length of serialised data
+  int scheck;
+  if (option == RIAK_MESSAGE_PUTREQ)
+  {
+    length = rpb_put_req__get_packed_size(putreq);
+    buffer = malloc(length);
+    rpb_put_req__pack(putreq, buffer);
+    if (scheck = send(client->fd, buffer, sizeof buffer, 0) == -1)
+      return -errno;
+    else
+      return 0;
+   }
+}
