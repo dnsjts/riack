@@ -44,7 +44,7 @@ START_TEST (test_riack_putreq_set)
   
   ck_assert_str_eq (putreq->bucket.data, "new-bucket");
   ck_assert_str_eq (putreq->type.data , "set");
-  ck_assert_str_eq (putreq->key.data, "none");
+  ck_assert_str_eq (putreq->key.data, "030620151900");
   ck_assert_str_eq (putreq->content->value.data, "some-value");
   ck_assert_str_eq (putreq->content->content_type.data, "text/plain");
   ck_assert_str_eq (putreq->content->content_encoding.data, "none");
