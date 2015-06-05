@@ -26,8 +26,8 @@
  * @{
  */
 
-#ifndef __RIACK_CONTENT_H__
-#define __RIACK_CONTENT_H__
+#ifndef __RIACK_PUTREQ_H__
+#define __RIACK_PUTREQ_H__
 
 #include <riack/proto/riak_kv.pb-c.h>
 
