@@ -75,7 +75,7 @@ typedef enum
     /** The client would use this option to send a RpbPutReq requst
      * To be used as a second argument in riack_client_send function
      */
-    RIAK_MESSAGE_PUTREQ
+    RIACK_MESSAGE_PUTREQ
    }riack_client_send_option_t;
     
 

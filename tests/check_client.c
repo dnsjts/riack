@@ -46,7 +46,7 @@ START_TEST (test_riack_client_connect_and_disconnect)
 
   riack_client_free (client);
 }
-
+END_TEST
 
 START_TEST (test_riack_client_send)
 {
