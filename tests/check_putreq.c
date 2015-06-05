@@ -52,7 +52,7 @@ START_TEST (test_riack_putreq_set)
   
  
 
-  riack_content_free (content);
+  
   riack_req_put_free (putreq);
   
   
