@@ -74,7 +74,7 @@ riack_client_connect (riack_client_t *client, ...)
   int err_check, flag;
   va_list args;
   char *hostname;
-  char *port;
+  char port[5];
   struct addrinfo server, *serverinfo, *p;
   memset(&server, 0, sizeof(server));
   server.ai_family = AF_UNSPEC;
