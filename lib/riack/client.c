@@ -97,7 +97,7 @@ riack_client_connect (riack_client_t *client, ...)
         }
      }
    }
-  if (flag == RIACK_CONNECT_OPTION_HOST) {
+  if (flag == RIACK_CONNECT_OPTION_NONE) {
     if ((err_check = getaddrinfo("127.0.0.1", "8087", &server, &serverinfo)) != 0) {
     fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err_check));
     return -errno;
