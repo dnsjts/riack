@@ -156,14 +156,47 @@ riack_client_send (riack_client_t *client, riack_client_send_option_t option, ri
   void *buffer; //buffer to store serialised data
   unsigned length; //length of serialised data
   int scheck;
+  uint32_t len;
+  int n;
+  uint8_t msgcode;
+  void *result_msg;
   if (option == RIACK_MESSAGE_PUTREQ)
   {
     length = rpb_put_req__get_packed_size(putreq);
     buffer = malloc(length);
     rpb_put_req__pack(putreq, buffer);
-    if (scheck = send(client->fd, buffer, sizeof buffer, 0) == -1)
+    if (scheck = send(client->fd, buffer, sizeof buffer, 0) == -1) {
+      free(buffer);
       return -errno;
-    else
+      
+      }
+    else {
+      //Receive response length 
+	  //n = recv(client->fd, &len, 4, MSG_WAITALL);
+	  //if (n != 4) {
+		//return -errno;
+	   //}
+      //Receive message code 
+	  //n = recv(client->fd, &msgcode, 1, MSG_WAITALL);
+	  //if (n != 1) {
+		
+		
+		//return -errno;
+	    //}
+	  //if (msgcode != 0)
+	  //{
+	    //Receive additional data, if such exists.
+	    //if(len>1) {
+		//result_msg = malloc(length-1);
+		//n = recv(client->fd, &result_msg, length-1, MSG_WAITALL);
+		//if (n != length-1) {
+			//free(result_msg);
+			//return -errno;
+		//}
+	  //}
+    //}
+	  free(buffer);
+      }
       return 0;
-   }
-}
+  }
+  }
