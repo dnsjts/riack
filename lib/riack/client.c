@@ -124,9 +124,9 @@ riack_client_connect (riack_client_t *client, ...)
     // looped off the end of the list with no connection
     fprintf(stderr, "failed to connect\n");
     return -errno;
-}
-
-freeaddrinfo(serverinfo); // all done with this structure
+  }
+  return 0;
+  freeaddrinfo(serverinfo); // all done with this structure
   
 }
 
