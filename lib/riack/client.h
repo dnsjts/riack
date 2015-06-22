@@ -160,6 +160,8 @@ int riack_client_disconnect (riack_client_t *client);
  */
 int riack_client_send (riack_client_t *client, riack_client_send_option_t option, riack_put_req_t *putreq);
 
+int riack_client_recv(riack_client_t *client);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

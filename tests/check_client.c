@@ -97,9 +97,12 @@ START_TEST (test_riack_client_send)
                                 RIACK_MESSAGE_PUTREQ,
                                 putreq),
                                 0);
+      ck_assert_errno
+            (riack_client_recv (client),
+                                0);
                                 
  
-
+      
   
   riack_req_put_free (putreq);
   
