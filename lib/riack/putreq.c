@@ -17,6 +17,7 @@
  */
 
 #include <riack/putreq.h>
+#include <riack/message.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -95,3 +96,18 @@ riack_req_put_set (riack_put_req_t *putreq, riack_req_put_field_t bflag, ...)
      
 
 }
+
+riack_message_t *
+riack_putreq_serialize(riack_put_req_t *putreq)
+{
+  uint32_t length;
+  riack_message_t * object;
+  length = rpb_put_req__get_packed_size(putreq);
+
+  object = (riack_message_t *) malloc(length + sizeof (object->length) + sizeof (object->message_code));
+  object->length = htonl (length + 1);
+  object->message_code = 11;
+  rpb_put_req__pack(putreq, object->data);
+  return object;
+}
+

@@ -16,45 +16,33 @@
  * License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** @file lib/riack/putreq.h
+/** @file lib/riack/message.h
  */
 
-/** @defgroup riack_putreq Riak RpbPutReq
+#include <stdint.h>
+
+/** @defgroup riack_putreq Riak riack_message
  *
  *
- * @addtogroup riack_putreq
+ * @addtogroup riack_message
  * @{
  */
 
-#ifndef __RIACK_PUTREQ_H__
-#define __RIACK_PUTREQ_H__
+#ifndef __RIACK_MESSAGE_H__
+#define __RIACK_MESSAGE_H__
 
-#include <riack/proto/riak_kv.pb-c.h>
-#include <message.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-typedef RpbContent riack_content_t;
-typedef RpbPutReq riack_put_req_t;
-
-typedef enum
-  {
-    RIACK_REQ_PUT_FIELD_NONE,
-    RIACK_REQ_PUT_FIELD_BUCKET,
-    RIACK_REQ_PUT_FIELD_BUCKET_TYPE,
-    RIACK_REQ_PUT_FIELD_KEY,
-    RIACK_REQ_PUT_FIELD_CONTENT,
-  } riack_req_put_field_t;
 
 
-riack_put_req_t *riack_req_put_new (void);
-void riack_req_put_free (riack_put_req_t *putreq);
-
-int riack_req_put_set (riack_put_req_t *putreq, riack_req_put_field_t RIACK_REQ_PUT_FIELD_BUCKET_TYPE, ...);
-
-riack_message_t * riack_putreq_serialize(riack_put_req_t *putreq);
-//used to serialize the data that is to be sent to riak
+typedef struct 
+{ 
+  uint32_t length; 
+  uint8_t message_code; 
+  uint8_t data[0]; 
+} riack_message_t;
 
 
 #ifdef __cplusplus

@@ -17,7 +17,7 @@
  */
 
 #include "riack/platform.h"
-
+#include <riack/message.h>
 #include <riack/client.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -151,19 +151,6 @@ riack_client_disconnect (riack_client_t *client)
   
 }
 
-riack_message_t *
-riack_putreq_serialize(riack_put_req_t *putreq)
-{
-  uint32_t length;
-  riack_message_t * object;
-  length = rpb_put_req__get_packed_size(putreq);
-
-  object = (riack_message_t *) malloc(length + sizeof (object->length) + sizeof (object->message_code));
-  object->length = htonl (length + 1);
-  object->message_code = 11;
-  rpb_put_req__pack(putreq, object->data);
-  return object;
-}
 
 int
 riack_client_send (riack_client_t *client, riack_client_send_option_t option, riack_put_req_t *putreq)
