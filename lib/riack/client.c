@@ -151,40 +151,41 @@ riack_client_disconnect (riack_client_t *client)
   
 }
 
+riack_message_t *
+riack_putreq_serialize(riack_put_req_t *putreq)
+{
+  uint32_t length;
+  riack_message_t * object;
+  length = rpb_put_req__get_packed_size(putreq);
+
+  object = (riack_message_t *) malloc(length + sizeof (object->length) + sizeof (object->message_code));
+  object->length = htonl (length + 1);
+  object->message_code = 11;
+  rpb_put_req__pack(putreq, object->data);
+  return object;
+}
 
 int
 riack_client_send (riack_client_t *client, riack_client_send_option_t option, riack_put_req_t *putreq)
 {
-  uint32_t length; //length of serialised data
+   //length of serialised data
   int scheck;
-  
-  if (option == RIACK_MESSAGE_PUTREQ)
-  {
-    struct buff
-    {
-      uint32_t length;
-      uint8_t code;
-      uint8_t data[0];
-    } *buff;
-
+  uint32_t length;
+  riack_message_t * buff;
+  if (option == RIACK_MESSAGE_PUTREQ) {
+    buff = riack_putreq_serialize(putreq);
     length = rpb_put_req__get_packed_size(putreq);
-
-    buff = (struct buff *) malloc(length + sizeof (buff->length) + sizeof (buff->code));
-    buff->length = htonl (length + 1);
-    buff->code = 11;
-
-    rpb_put_req__pack(putreq, buff->data);
-    if (scheck = send(client->fd, buff, length + sizeof (buff->length) + sizeof (buff->code), 0) == -1) {
-      free(buff);
-      return -errno;
-      
-      }
+  }
+  if (scheck = send(client->fd, buff, length + sizeof (buff->length) + sizeof (buff->message_code), 0) == -1) {
+    free(buff);
+    return -errno;
+  }
     else {
       free(buff);
       return 0;
       }
-  }
-  }
+}
+
   
 int
 riack_client_recv(riack_client_t *client)

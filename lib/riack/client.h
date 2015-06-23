@@ -77,6 +77,8 @@ typedef enum
      */
     RIACK_MESSAGE_PUTREQ
    }riack_client_send_option_t;
+   
+
     
 
 #ifdef __cplusplus
@@ -92,6 +94,13 @@ typedef struct _riack_client_t
 int fd;
 int conn;
 } riack_client_t;
+
+typedef struct 
+{ 
+  uint32_t length; 
+  uint8_t message_code; 
+  uint8_t data[0]; 
+} riack_message_t;
 
 /** Return the library version.
  *
@@ -159,8 +168,15 @@ int riack_client_disconnect (riack_client_t *client);
  * @retval -errno for internal error
  */
 int riack_client_send (riack_client_t *client, riack_client_send_option_t option, riack_put_req_t *putreq);
+//send data to riak
 
 int riack_client_recv(riack_client_t *client);
+//receive data from riak
+
+riack_message_t * riack_putreq_serialize(riack_put_req_t *putreq);
+//used by riak_client_send to serialize the data that is to be sent to riak
+
+
 
 #ifdef __cplusplus
 } /* extern "C" */
