@@ -26,7 +26,7 @@
  * @{
  */
 
-#include <message.h>
+#include <riack/message.h>
 #include <riack/proto/riak_kv.pb-c.h>
 
 

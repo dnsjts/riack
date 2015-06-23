@@ -30,7 +30,7 @@
 #define __RIACK_PUTREQ_H__
 
 #include <riack/proto/riak_kv.pb-c.h>
-#include <message.h>
+#include <riack/message.h>
 
 #ifdef __cplusplus
 extern "C" {
