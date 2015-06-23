@@ -63,7 +63,8 @@ riack_req_put_set (riack_put_req_t *putreq, riack_req_put_field_t bflag, ...)
   if (bucket == NULL)
     return -EINVAL;
   else {
-    free(putreq->bucket.data);
+    if (putreq->bucket.data)
+      free(putreq->bucket.data);
     putreq->bucket.data = strdup(bucket);
     putreq->bucket.len = strlen(bucket);
     }
@@ -73,13 +74,16 @@ riack_req_put_set (riack_put_req_t *putreq, riack_req_put_field_t bflag, ...)
     switch (flag) {
       case (RIACK_REQ_PUT_FIELD_BUCKET_TYPE):
         bucket_type  = (char *)va_arg(args, char *);
-        free(putreq->type.data);
+        if (putreq->type.data)
+          free(putreq->type.data);
         putreq->type.data = strdup(bucket_type);
         putreq->type.len = strlen(bucket_type);
+        
         break;
       case (RIACK_REQ_PUT_FIELD_KEY):
         key = (char *)va_arg(args, char *);
-        free(putreq->key.data);
+        if(putreq->key.data)
+          free(putreq->key.data);
         putreq->key.data = strdup(key);
         putreq->key.len = strlen(key);
         break;

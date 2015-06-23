@@ -72,26 +72,39 @@ riack_content_set (riack_content_t *content, ...)
         char sub_val[length+1];
         strncpy(sub_val, val, length);
         sub_val[length] ='\0';
-        free(content->value.data);
+        if (content->value.data)
+          free(content->value.data);
         content->value.data = strdup(sub_val);
         content->value.len = length;
         }
       else if (val == NULL){
-        free(content->value.data);
+        if (content->value.data)
+          free(content->value.data);
         content->value.data = NULL;
         content->value.len = 0;
         }
       else {
-        free(content->value.data);
+        if (content->value.data)
+          free(content->value.data);
         content->value.data = strdup(val);
         content->value.len = strlen(val);
         }
       break;
     case (RIACK_CONTENT_FIELD_CONTENT_TYPE):
-      free(content->content_type.data);
+      if (content->content_type.data)
+        free(content->content_type.data);
       cont_type = (char *)va_arg(args, char *);
-      content->content_type.data = strdup(cont_type);
-      content->content_type.len = strlen(cont_type);
+      if (cont_type) {
+        content->has_content_type = 1;
+        content->content_type.data = strdup(cont_type);
+        content->content_type.len = strlen(cont_type);
+        }
+      else {
+        content->content_type.data = NULL;
+        content->content_type.len = 0;
+        content->has_content_type = 0;
+        }
+        
       break;
     case (RIACK_CONTENT_FIELD_CONTENT_ENCODING):
       free(content->content_encoding.data);
@@ -100,10 +113,19 @@ riack_content_set (riack_content_t *content, ...)
       content->content_encoding.len = strlen(cont_encod);
       break;
     case (RIACK_CONTENT_FIELD_CHARSET):
-      free(content->charset.data);
+      if (content->charset.data)
+        free(content->charset.data);
       charset = (char *)va_arg(args, char *);
+      if (charset) {
+      content->has_charset = 1;
       content->charset.data = strdup(charset);
       content->charset.len = strlen(charset);
+      }
+      else {
+      content->has_charset = 0;
+      content->charset.data = NULL;
+      content->charset.len = 0;
+      }
       break;
      }
   }
