@@ -25,7 +25,10 @@
  * @addtogroup riack_client
  * @{
  */
+
+#include <message.h>
 #include <riack/proto/riak_kv.pb-c.h>
+
 
 #ifndef __RIACK_CLIENT_H__
 #define __RIACK_CLIENT_H__
@@ -162,7 +165,7 @@ int riack_client_disconnect (riack_client_t *client);
  * @retval 0 is returned on success
  * @retval -errno for internal error
  */
-int riack_client_send (riack_client_t *client, riack_client_send_option_t option, riack_put_req_t *putreq);
+int riack_client_send (riack_client_t *client, riack_message_t *message);
 //send data to riak
 
 int riack_client_recv(riack_client_t *client);

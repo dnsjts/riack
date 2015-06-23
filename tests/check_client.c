@@ -53,6 +53,7 @@ START_TEST (test_riack_client_send)
   riack_client_t *client;
   riack_put_req_t *putreq;
   riack_content_t *content;
+  riack_message_t *message;
 
 
   client = riack_client_new ();
@@ -90,12 +91,12 @@ START_TEST (test_riack_client_send)
                          RIACK_REQ_PUT_FIELD_CONTENT, content,
                          RIACK_REQ_PUT_FIELD_NONE),
                          0);
-
-  
+                         
+      message = riack_putreq_serialize(putreq);
+      
       ck_assert_errno
             (riack_client_send (client,
-                                RIACK_MESSAGE_PUTREQ,
-                                putreq),
+                                message),
                                 0);
       ck_assert_errno
             (riack_client_recv (client),

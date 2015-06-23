@@ -39,7 +39,7 @@ extern "C" {
 
 typedef struct 
 { 
-  uint32_t length; 
+  uint32_t length;
   uint8_t message_code; 
   uint8_t data[0]; 
 } riack_message_t;

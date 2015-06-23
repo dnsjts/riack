@@ -35,7 +35,8 @@ pkginclude_HEADERS		= \
 	lib/riack/client.h	  \
 	lib/riack/content.h	  \
 	lib/riack/riack.h   \
-	lib/riack/putreq.h
+	lib/riack/putreq.h  \
+	lib/riack/message.h
 lib_libriack_la_SOURCES		= \
 	lib/riack/client.c	  \
 	lib/riack/content.c    \

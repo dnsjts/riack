@@ -28,6 +28,7 @@
 #include <riack/client.h>
 #include <riack/content.h>
 #include <riack/putreq.h>
+#include <riack/message.h>
 
 
 /** @mainpage

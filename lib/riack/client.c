@@ -17,7 +17,6 @@
  */
 
 #include "riack/platform.h"
-#include <riack/message.h>
 #include <riack/client.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -153,22 +152,19 @@ riack_client_disconnect (riack_client_t *client)
 
 
 int
-riack_client_send (riack_client_t *client, riack_client_send_option_t option, riack_put_req_t *putreq)
+riack_client_send (riack_client_t *client, riack_message_t *message)
 {
-   //length of serialised data
   int scheck;
   uint32_t length;
-  riack_message_t * buff;
-  if (option == RIACK_MESSAGE_PUTREQ) {
-    buff = riack_putreq_serialize(putreq);
-    length = rpb_put_req__get_packed_size(putreq);
-  }
-  if (scheck = send(client->fd, buff, length + sizeof (buff->length) + sizeof (buff->message_code), 0) == -1) {
-    free(buff);
+  length = ntohl(message->length);
+  length -= 1;
+  
+  if (scheck = send(client->fd, message, length + sizeof (message->length) + sizeof (message->message_code), 0) == -1) {
+    free(message);
     return -errno;
   }
     else {
-      free(buff);
+      free(message);
       return 0;
       }
 }
