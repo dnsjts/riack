@@ -28,12 +28,17 @@
 
 #include <riack/message.h>
 #include <riack/proto/riak_kv.pb-c.h>
+#include <riack/proto/riak_dt.pb-c.h>
+
 
 
 #ifndef __RIACK_CLIENT_H__
 #define __RIACK_CLIENT_H__
 
 typedef RpbPutReq riack_put_req_t;
+typedef DtUpdateReq riack_dt_update_req_t;
+
+
 
 /** Riak connect options.
  *

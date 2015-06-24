@@ -16,30 +16,45 @@
  * License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** @file lib/riack/riack.h
- * The main entry point of the riack API.
+/** @file lib/riack/setop.h
  */
 
-#ifndef __RIACK_RIACK_H__
-#define __RIACK_RIACK_H__
-
-#include <errno.h>
-
-#include <riack/client.h>
-#include <riack/content.h>
-#include <riack/putreq.h>
-#include <riack/message.h>
-#include <riack/dtupdatereq.h>
-#include <riack/dtop.h>
-#include <riack/setop.h>
-
-
-/** @mainpage
+/** @defgroup riack_dtop riack_setop Riak SetOp
  *
- * @section manual_intro Introduction
  *
- * ...documentation comes here...
- *
+ * @addtogroup riack_setop
+ * @{
  */
+
+#ifndef __RIACK_SETOP_H__
+#define __RIACK_SETOP_H__
+
+#include <riack/proto/riak_kv.pb-c.h>
+#include <riack/proto/riak_dt.pb-c.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+typedef SetOp riack_setop_t;
+
+typedef enum
+{
+  RIACK_SETOP_FIELD_NONE,
+  RIACK_SETOP_FIELD_ADD,
+  RIACK_SETOP_FIELD_REMOVE
+} riack_setop_field_t;
+
+riack_setop_t *riack_setop_new (void);
+void riack_setop_free (riack_setop_t *setop);
+
+int riack_setop_set (riack_setop_t *setop, ...);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+/** @} */
 
 #endif

@@ -21,4 +21,15 @@ RIACK_1.0 {
         riack_req_put_new;
         riack_req_put_set;
         riack_req_put_free;
+        riack_req_dt_update_new;
+        riack_req_dt_update_free;
+        riack_req_dt_update_set;
+        riack_dt_op_new;
+        riack_dt_op_free;
+        riack_dt_op_set;
+        riack_setop_new;
+        riack_setop_free;
+        riack_setop_set;
+        riack_dtupdatereq_serialize;
+        
 } RIACK_LOCAL;

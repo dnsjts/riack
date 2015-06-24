@@ -16,30 +16,44 @@
  * License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** @file lib/riack/riack.h
- * The main entry point of the riack API.
+/** @file lib/riack/dtop.h
  */
 
-#ifndef __RIACK_RIACK_H__
-#define __RIACK_RIACK_H__
-
-#include <errno.h>
-
-#include <riack/client.h>
-#include <riack/content.h>
-#include <riack/putreq.h>
-#include <riack/message.h>
-#include <riack/dtupdatereq.h>
-#include <riack/dtop.h>
-#include <riack/setop.h>
-
-
-/** @mainpage
+/** @defgroup riack_dtop Riak DtOp
  *
- * @section manual_intro Introduction
  *
- * ...documentation comes here...
- *
+ * @addtogroup riack_dtop
+ * @{
  */
+
+#ifndef __RIACK_DTOP_H__
+#define __RIACK_DTOP_H__
+
+#include <riack/proto/riak_kv.pb-c.h>
+#include <riack/proto/riak_dt.pb-c.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef DtOp riack_dt_op_t;
+typedef SetOp riack_setop_t;
+
+typedef enum
+{
+  RIACK_DT_OP_FIELD_NONE,
+  RIACK_DT_OP_FIELD_SETOP
+} riack_dt_op_field_t;
+
+riack_dt_op_t *riack_dt_op_new (void);
+void riack_dt_op_free (riack_dt_op_t *dtop);
+
+int riack_dt_op_set (riack_dt_op_t *dtop, ...);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+/** @} */
 
 #endif

@@ -28,33 +28,47 @@ riak_proto_files		= \
 riak_kv_proto_files		= \
 	lib/riack/proto/riak_kv.pb-c.c  \
 	lib/riack/proto/riak_kv.pb-c.h
+riak_dt_proto_files		= \
+	lib/riack/proto/riak_dt.pb-c.c  \
+	lib/riack/proto/riak_dt.pb-c.h
 nodist_proto_HEADERS		= \
 	lib/riack/proto/riak.pb-c.h \
-	lib/riack/proto/riak_kv.pb-c.h
+	lib/riack/proto/riak_kv.pb-c.h  \
+	lib/riack/proto/riak_dt.pb-c.h
 pkginclude_HEADERS		= \
 	lib/riack/client.h	  \
 	lib/riack/content.h	  \
 	lib/riack/riack.h   \
 	lib/riack/putreq.h  \
-	lib/riack/message.h
+	lib/riack/message.h \
+	lib/riack/dtupdatereq.h \
+	lib/riack/dtop.h \
+	lib/riack/setop.h 
 lib_libriack_la_SOURCES		= \
 	lib/riack/client.c	  \
 	lib/riack/content.c    \
-	lib/riack/putreq.c
-$(am_lib_libriack_la_OBJECTS): ${riak_proto_files} ${riak_kv_proto_files}
+	lib/riack/putreq.c  \
+	lib/riack/dtupdatereq.c  \
+	lib/riack/dtop.c  \
+	lib/riack/setop.c  
+$(am_lib_libriack_la_OBJECTS): ${riak_proto_files} ${riak_kv_proto_files} ${riak_dt_proto_files}
 noinst_HEADERS			= \
 	lib/riack/_private.h
 
 nodist_lib_libriack_la_SOURCES	= \
-	${riak_proto_files} ${riak_kv_proto_files}
+	${riak_proto_files} ${riak_kv_proto_files} ${riak_dt_proto_files}
 
-CLEANFILES			= ${riak_proto_files} ${riak_kv_proto_files}
+CLEANFILES			= ${riak_proto_files} ${riak_kv_proto_files} ${riak_dt_proto_files}
 
 ${riak_proto_files}: ${top_srcdir}/ext/riak_pb/src/riak.proto
 	${AM_V_at} ${mkinstalldirs} ${top_builddir}/lib/riack/proto
 	${AM_V_GEN} protoc-c $^ -I${top_srcdir}/ext/riak_pb/src --c_out=${top_builddir}/lib/riack/proto
 
 ${riak_kv_proto_files}: ${top_srcdir}/ext/riak_pb/src/riak_kv.proto
+	${AM_V_at} ${mkinstalldirs} ${top_builddir}/lib/riack/proto
+	${AM_V_GEN} protoc-c $^ -I${top_srcdir}/ext/riak_pb/src --c_out=${top_builddir}/lib/riack/proto
+	
+${riak_dt_proto_files}: ${top_srcdir}/ext/riak_pb/src/riak_dt.proto
 	${AM_V_at} ${mkinstalldirs} ${top_builddir}/lib/riack/proto
 	${AM_V_GEN} protoc-c $^ -I${top_srcdir}/ext/riak_pb/src --c_out=${top_builddir}/lib/riack/proto
 
