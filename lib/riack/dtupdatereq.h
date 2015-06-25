@@ -56,7 +56,7 @@ typedef enum
 riack_dt_update_req_t *riack_req_dt_update_new (void);
 void riack_req_dt_update_free (riack_dt_update_req_t *dtupdatereq);
 
-int riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, riack_req_dt_update_field_t bflag, ...);
+int riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, ...);
 
 riack_message_t * riack_dtupdatereq_serialize(riack_dt_update_req_t *dtupdatereq);
 //used to serialize the data that is to be sent to riak

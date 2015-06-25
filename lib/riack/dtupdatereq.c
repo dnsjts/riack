@@ -41,7 +41,7 @@ riack_req_dt_update_free (riack_dt_update_req_t *dtupdatereq)
 
 
 int 
-riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, riack_req_dt_update_field_t bflag, ...)
+riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, ...)
 {
   va_list args;
   if (dtupdatereq == NULL)
@@ -53,20 +53,19 @@ riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, riack_req_dt_update
   char *key;
   
   
-  va_start(args, bflag);
-  bucket = (char *)va_arg(args, char *);
-  if (bucket == NULL)
-    return -EINVAL;
-  else {
-    if (dtupdatereq->bucket.data)
-      free(dtupdatereq->bucket.data);
-    dtupdatereq->bucket.data = strdup(bucket);
-    dtupdatereq->bucket.len = strlen(bucket);
-    }
-  while ((flag = va_arg(args, int)) != 0)
+  va_start(args, dtupdatereq);
+  
+  while ((flag = va_arg(args, int)) != RIACK_REQ_DT_UPDATE_FIELD_NONE)
   {
     
     switch (flag) {
+      case (RIACK_REQ_DT_UPDATE_FIELD_BUCKET):
+        bucket = (char *)va_arg(args, char *);
+        if (dtupdatereq->bucket.data)
+            free(dtupdatereq->bucket.data);
+        dtupdatereq->bucket.data = strdup(bucket);
+        dtupdatereq->bucket.len = strlen(bucket);
+        break;
       case (RIACK_REQ_DT_UPDATE_FIELD_BUCKET_TYPE):
         bucket_type  = (char *)va_arg(args, char *);
         if (dtupdatereq->type.data)

@@ -26,7 +26,7 @@
 riack_setop_t *
 riack_setop_new (void)
 {
-  riack_setop_t *setop;
+  riack_setop_t *setop = (riack_setop_t*)malloc(sizeof(riack_setop_t));
   set_op__init(setop);
   return setop;
 }
@@ -57,8 +57,7 @@ riack_setop_set (riack_setop_t *setop, ...)
   {
     
     switch (flag) {
-      case(-1) :
-        break;
+      
       case (RIACK_SETOP_FIELD_ADD):
         //while ((flagadd = va_arg(args, int)) != RIACK_SETOP_FIELD_REMOVE) 
         //{
@@ -66,14 +65,14 @@ riack_setop_set (riack_setop_t *setop, ...)
           free(setop->adds[0].data);
         adds = (char *)va_arg(args, char *);
         if (adds) {
-          
+          //setop->adds = malloc(sizeof(adds));
           setop->adds[0].data =strdup(adds);
           setop->adds[0].len = strlen(adds);
           }
         
         break;
       case (RIACK_SETOP_FIELD_REMOVE):
-        //while ((flagadd = va_arg(args, int)) != RIACK_SETOP_FIELD_REMOVE) 
+        //while ((flagadd = va_arg(args, int)) != RIACK_SETOP_FIELD_ADD) 
         //{
         if(setop->removes[0].data)
           free(setop->removes[0].data);
