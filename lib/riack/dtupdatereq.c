@@ -112,7 +112,7 @@ riack_dtupdatereq_serialize(riack_dt_update_req_t *dtupdatereq)
 
   object = (riack_message_t *) malloc(length + sizeof (object->length) + sizeof (object->message_code));
   object->length = htonl (length + 1);
-  object->message_code = 11;
+  object->message_code = 82;
   dt_update_req__pack(dtupdatereq, object->data);
   return object;
 

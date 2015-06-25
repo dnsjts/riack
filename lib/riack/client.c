@@ -197,7 +197,7 @@ riack_client_recv(riack_client_t *client)
 	  n = recv(client->fd, result_msg, len-1, MSG_WAITALL);
 	  if (n != len-1) {
 	    free(result_msg);
-	  return -errno;
+	    return -errno;
 		}
 	free(result_msg);
 	return 0;

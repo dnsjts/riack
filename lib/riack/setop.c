@@ -61,11 +61,12 @@ riack_setop_set (riack_setop_t *setop, ...)
       case (RIACK_SETOP_FIELD_ADD):
         //while ((flagadd = va_arg(args, int)) != RIACK_SETOP_FIELD_REMOVE) 
         //{
-        if(setop->adds[0].data)
-          free(setop->adds[0].data);
+        if (setop->adds)
+            free(setop->adds[0].data);
         adds = (char *)va_arg(args, char *);
         if (adds) {
-          //setop->adds = malloc(sizeof(adds));
+          setop->n_adds = 1;
+          setop->adds = malloc(sizeof(adds));
           setop->adds[0].data =strdup(adds);
           setop->adds[0].len = strlen(adds);
           }
@@ -74,11 +75,12 @@ riack_setop_set (riack_setop_t *setop, ...)
       case (RIACK_SETOP_FIELD_REMOVE):
         //while ((flagadd = va_arg(args, int)) != RIACK_SETOP_FIELD_ADD) 
         //{
-        if(setop->removes[0].data)
+        if(setop->removes)
           free(setop->removes[0].data);
         removes = (char *)va_arg(args, char *);
-        if (adds) {
-          
+        if (removes) {
+          setop->n_removes = 1;
+          setop->removes = malloc(sizeof(adds));
           setop->removes[0].data =strdup(removes);
           setop->removes[0].len = strlen(removes);
           }
