@@ -57,8 +57,7 @@ START_TEST (test_riack_req_dt_update_set)
 
   
   riack_req_dt_update_free (dtupdatereq);
-  riack_dt_op_free (dtop);
-  riack_setop_free (setop);
+  
   
   
 }

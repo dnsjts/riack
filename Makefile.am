@@ -101,7 +101,8 @@ check_libriack_srcs		= \
 	tests/check_libriack.c    \
 	tests/check_putreq.c    \
 	tests/check_dtupdatereq.c   \
-	tests/check_setop.c
+	tests/check_setop.c \
+	tests/check_dtop.c
 
 # -- Extra files to distribute --
 EXTRA_DIST			= README.md NEWS.md GPL LGPL \
