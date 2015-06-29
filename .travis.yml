@@ -6,6 +6,8 @@ before_install:
 install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq check protobuf-c-compiler libprotobuf-c0-dev
+  - sudo riak-admin bucket-type create sets '{"props":{"datatype":"set"}}'
+  - sudo riak-admin bucket-type activate sets 
 before_script:
   - autoreconf -i
 script:
