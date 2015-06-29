@@ -192,7 +192,7 @@ START_TEST (test_riack_client_send_dtupdatereq)
             (riack_client_send (client,
                                 message),
                                 0);
-      ck_assert_errno
+     ck_assert_errno
             (riack_client_recv (client),
                                 0);
                                 

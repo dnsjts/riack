@@ -203,4 +203,5 @@ riack_client_recv(riack_client_t *client)
 	return 0;
 	  }
     }
+    return -errno;
 }
