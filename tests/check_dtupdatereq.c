@@ -41,7 +41,7 @@ START_TEST (test_riack_req_dt_update_set)
   ck_assert_errno
     (riack_req_dt_update_set (dtupdatereq,
                         RIACK_REQ_DT_UPDATE_FIELD_BUCKET, "setbucket", 
-                        RIACK_REQ_DT_UPDATE_FIELD_BUCKET_TYPE, "set", 
+                        RIACK_REQ_DT_UPDATE_FIELD_BUCKET_TYPE, "sets", 
                         RIACK_REQ_DT_UPDATE_FIELD_DT_OP, dtop,
                         RIACK_REQ_DT_UPDATE_FIELD_NONE),
      0);
@@ -50,7 +50,7 @@ START_TEST (test_riack_req_dt_update_set)
 
   
   ck_assert_str_eq (dtupdatereq->bucket.data, "setbucket");
-  ck_assert_str_eq (dtupdatereq->type.data , "set");
+  ck_assert_str_eq (dtupdatereq->type.data , "sets");
   ck_assert_str_eq (dtupdatereq->op->set_op->adds[0].data, "addsomething");
   
  
