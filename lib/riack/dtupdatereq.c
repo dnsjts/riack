@@ -23,6 +23,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <errno.h>
+#include <netinet/in.h>
 
 riack_dt_update_req_t *
 riack_req_dt_update_new (void)
@@ -63,14 +64,14 @@ riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, ...)
         bucket = (char *)va_arg(args, char *);
         if (dtupdatereq->bucket.data)
             free(dtupdatereq->bucket.data);
-        dtupdatereq->bucket.data = strdup(bucket);
+        dtupdatereq->bucket.data = (unsigned char *)strdup(bucket);
         dtupdatereq->bucket.len = strlen(bucket);
         break;
       case (RIACK_REQ_DT_UPDATE_FIELD_BUCKET_TYPE):
         bucket_type  = (char *)va_arg(args, char *);
         if (dtupdatereq->type.data)
           free(dtupdatereq->type.data);
-        dtupdatereq->type.data = strdup(bucket_type);
+        dtupdatereq->type.data = (unsigned char *)strdup(bucket_type);
         dtupdatereq->type.len = strlen(bucket_type);
         
         break;
@@ -80,7 +81,7 @@ riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, ...)
           free(dtupdatereq->key.data);
         if (key) {
           
-          dtupdatereq->key.data = strdup(key);
+          dtupdatereq->key.data = (unsigned char *)strdup(key);
           dtupdatereq->key.len = strlen(key);
         }
         
@@ -95,6 +96,8 @@ riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, ...)
   }
   if(flag == RIACK_REQ_DT_UPDATE_FIELD_NONE)
     return 0;
+  
+  return -errno;
 }
      
                              

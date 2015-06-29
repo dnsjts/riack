@@ -63,5 +63,6 @@ riack_dt_op_set (riack_dt_op_t *dtop, ...)
   }
   if(flag == RIACK_DT_OP_FIELD_NONE)
     return 0;
-     
+  
+  return -errno; 
 }

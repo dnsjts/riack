@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <netinet/in.h>
 #include <errno.h>
 
 
@@ -65,7 +66,7 @@ riack_req_put_set (riack_put_req_t *putreq, riack_req_put_field_t bflag, ...)
   else {
     if (putreq->bucket.data)
       free(putreq->bucket.data);
-    putreq->bucket.data = strdup(bucket);
+    putreq->bucket.data = (unsigned char *)strdup(bucket);
     putreq->bucket.len = strlen(bucket);
     }
   while ((flag = va_arg(args, int)) != 0)
@@ -76,7 +77,7 @@ riack_req_put_set (riack_put_req_t *putreq, riack_req_put_field_t bflag, ...)
         bucket_type  = (char *)va_arg(args, char *);
         if (putreq->type.data)
           free(putreq->type.data);
-        putreq->type.data = strdup(bucket_type);
+        putreq->type.data = (unsigned char *)strdup(bucket_type);
         putreq->type.len = strlen(bucket_type);
         
         break;
@@ -84,7 +85,7 @@ riack_req_put_set (riack_put_req_t *putreq, riack_req_put_field_t bflag, ...)
         key = (char *)va_arg(args, char *);
         if(putreq->key.data)
           free(putreq->key.data);
-        putreq->key.data = strdup(key);
+        putreq->key.data = (unsigned char *)strdup(key);
         putreq->key.len = strlen(key);
         break;
       case (RIACK_REQ_PUT_FIELD_CONTENT):
@@ -98,7 +99,7 @@ riack_req_put_set (riack_put_req_t *putreq, riack_req_put_field_t bflag, ...)
   if(flag == RIACK_REQ_PUT_FIELD_NONE)
     return 0;
      
-
+  return -errno;
 }
 
 riack_message_t *

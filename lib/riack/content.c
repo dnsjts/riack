@@ -74,7 +74,7 @@ riack_content_set (riack_content_t *content, ...)
         sub_val[length] ='\0';
         if (content->value.data)
           free(content->value.data);
-        content->value.data = strdup(sub_val);
+        content->value.data = (unsigned char *)strdup(sub_val);
         content->value.len = length;
         }
       else if (val == NULL){
@@ -86,7 +86,7 @@ riack_content_set (riack_content_t *content, ...)
       else {
         if (content->value.data)
           free(content->value.data);
-        content->value.data = strdup(val);
+        content->value.data = (unsigned char *)strdup(val);
         content->value.len = strlen(val);
         }
       break;
@@ -96,7 +96,7 @@ riack_content_set (riack_content_t *content, ...)
       cont_type = (char *)va_arg(args, char *);
       if (cont_type) {
         content->has_content_type = 1;
-        content->content_type.data = strdup(cont_type);
+        content->content_type.data = (unsigned char *)strdup(cont_type);
         content->content_type.len = strlen(cont_type);
         }
       else {
@@ -109,7 +109,7 @@ riack_content_set (riack_content_t *content, ...)
     case (RIACK_CONTENT_FIELD_CONTENT_ENCODING):
       free(content->content_encoding.data);
       cont_encod = (char *)va_arg(args, char *);
-      content->content_encoding.data = strdup(cont_encod);
+      content->content_encoding.data = (unsigned char *)strdup(cont_encod);
       content->content_encoding.len = strlen(cont_encod);
       break;
     case (RIACK_CONTENT_FIELD_CHARSET):
@@ -118,7 +118,7 @@ riack_content_set (riack_content_t *content, ...)
       charset = (char *)va_arg(args, char *);
       if (charset) {
       content->has_charset = 1;
-      content->charset.data = strdup(charset);
+      content->charset.data = (unsigned char *)strdup(charset);
       content->charset.len = strlen(charset);
       }
       else {
@@ -132,8 +132,5 @@ riack_content_set (riack_content_t *content, ...)
   if(flag == RIACK_CONTENT_FIELD_NONE)
     return 0;
      
-
-
-
-
+    return -errno;
 }

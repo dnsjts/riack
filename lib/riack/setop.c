@@ -46,7 +46,7 @@ riack_setop_set (riack_setop_t *setop, ...)
   char *adds;
   char *removes;
   int flag;
-  int flagadd;
+  
   
   if (setop == NULL)
     return -EINVAL;
@@ -67,7 +67,7 @@ riack_setop_set (riack_setop_t *setop, ...)
         if (adds) {
           setop->n_adds = 1;
           setop->adds = malloc(sizeof(adds));
-          setop->adds[0].data =strdup(adds);
+          setop->adds[0].data = (unsigned char *)strdup(adds);
           setop->adds[0].len = strlen(adds);
           }
         
@@ -81,7 +81,7 @@ riack_setop_set (riack_setop_t *setop, ...)
         if (removes) {
           setop->n_removes = 1;
           setop->removes = malloc(sizeof(adds));
-          setop->removes[0].data =strdup(removes);
+          setop->removes[0].data = (unsigned char *)strdup(removes);
           setop->removes[0].len = strlen(removes);
           }
        
@@ -90,5 +90,6 @@ riack_setop_set (riack_setop_t *setop, ...)
   }
   if(flag == RIACK_SETOP_FIELD_NONE)
     return 0;
-     
+ 
+  return -errno;   
 }

@@ -139,7 +139,7 @@ riack_client_disconnect (riack_client_t *client)
     return -ENOTCONN;
 
 
-  if(rval=shutdown(client->fd, 2) !=0) {
+  if((rval=shutdown(client->fd, 2)) !=0) {
     
     return -errno;
     }
@@ -159,7 +159,7 @@ riack_client_send (riack_client_t *client, riack_message_t *message)
   length = ntohl(message->length);
   length -= 1;
   
-  if (scheck = send(client->fd, message, length + sizeof (message->length) + sizeof (message->message_code), 0) == -1) {
+  if ((scheck = send(client->fd, message, length + sizeof (message->length) + sizeof (message->message_code), 0))  == -1) {
     free(message);
     return -errno;
   }
@@ -195,7 +195,7 @@ riack_client_recv(riack_client_t *client)
 	if (len>1) {
 	  result_msg = malloc(len-1);
 	  n = recv(client->fd, result_msg, len-1, MSG_WAITALL);
-	  if (n != len-1) {
+	  if ((unsigned)n != len-1) {
 	    free(result_msg);
 	    return -errno;
 		}
