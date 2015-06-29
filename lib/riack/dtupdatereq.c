@@ -79,15 +79,11 @@ riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, ...)
         if(dtupdatereq->key.data)
           free(dtupdatereq->key.data);
         if (key) {
-        dtupdatereq->has_key = 1;
-        dtupdatereq->key.data = strdup(key);
-        dtupdatereq->key.len = strlen(key);
+          
+          dtupdatereq->key.data = strdup(key);
+          dtupdatereq->key.len = strlen(key);
         }
-        else {
-        dtupdatereq->has_key = 0;
-        dtupdatereq->key.data = NULL;
-        dtupdatereq->key.len = 0;
-        }
+        
         break;
       case (RIACK_REQ_DT_UPDATE_FIELD_DT_OP):
         dtop = (riack_dt_op_t *)va_arg(args, riack_dt_op_t *);

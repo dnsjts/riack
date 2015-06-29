@@ -145,29 +145,30 @@ START_TEST (test_riack_client_send_dtupdatereq)
   dtupdatereq = riack_req_dt_update_new ();
   dtop = riack_dt_op_new();
   setop = riack_setop_new();
-  
+      
 
-  ck_assert_errno
-    (riack_req_dt_update_set
-     (NULL, RIACK_REQ_DT_UPDATE_FIELD_NONE),
-     EINVAL);
-     
-  ck_assert_errno
-    (riack_setop_set (setop,
-                  RIACK_SETOP_FIELD_ADD, "addsomething",
-                  RIACK_SETOP_FIELD_NONE),
-                  0);
-                  
-  ck_assert_errno
-    (riack_dt_op_set (dtop,
-                RIACK_DT_OP_FIELD_SETOP, setop,
-                RIACK_DT_OP_FIELD_NONE),
-                0);
+      ck_assert_errno
+        (riack_req_dt_update_set
+         (NULL, RIACK_REQ_DT_UPDATE_FIELD_NONE),
+         EINVAL);
+         
+      ck_assert_errno
+        (riack_setop_set (setop,
+                      RIACK_SETOP_FIELD_ADD, "addsomething",
+                      RIACK_SETOP_FIELD_NONE),
+                      0);
+                      
+      ck_assert_errno
+        (riack_dt_op_set (dtop,
+                    RIACK_DT_OP_FIELD_SETOP, setop,
+                    RIACK_DT_OP_FIELD_NONE),
+                    0);
 
-  ck_assert_errno
-    (riack_req_dt_update_set (dtupdatereq,
-                        RIACK_REQ_DT_UPDATE_FIELD_BUCKET, "setbucket", 
-                        RIACK_REQ_DT_UPDATE_FIELD_BUCKET_TYPE, "sets", 
+      ck_assert_errno
+        (riack_req_dt_update_set (dtupdatereq,
+                            RIACK_REQ_DT_UPDATE_FIELD_BUCKET, "setbucket", 
+                            RIACK_REQ_DT_UPDATE_FIELD_BUCKET_TYPE, "sets", 
+                        RIACK_REQ_DT_UPDATE_FIELD_KEY, "new key",
                         RIACK_REQ_DT_UPDATE_FIELD_DT_OP, dtop,
                         RIACK_REQ_DT_UPDATE_FIELD_NONE),
      0);
@@ -177,6 +178,7 @@ START_TEST (test_riack_client_send_dtupdatereq)
   
   ck_assert_str_eq (dtupdatereq->bucket.data, "setbucket");
   ck_assert_str_eq (dtupdatereq->type.data , "sets");
+  ck_assert_str_eq (dtupdatereq->key.data , "new key");
   ck_assert_str_eq (dtupdatereq->op->set_op->adds[0].data, "addsomething");
   
  
