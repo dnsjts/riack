@@ -20,6 +20,7 @@
  */
 
 #include <stdint.h>
+#include <stddef.h>
 
 /** @defgroup riack_putreq Riak riack_message
  *

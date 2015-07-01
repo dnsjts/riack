@@ -31,5 +31,5 @@ RIACK_1.0 {
         riack_setop_free;
         riack_setop_set;
         riack_dtupdatereq_serialize;
-        
+        riack_req_dt_update_set_bulk;
 } RIACK_LOCAL;
