@@ -62,10 +62,12 @@ riack_setop_set (riack_setop_t *setop, ...)
       case (RIACK_SETOP_FIELD_BULK_ADD):
         limit = va_arg(args, int);
         setop->n_adds = limit;
-        setop->adds = malloc(sizeof(char *) * setop->n_adds);
-        for (idx= 0; idx< limit; idx++) {
+        for (idx =0;idx<limit;idx++)
           if (setop->adds)
             free(setop->adds[idx].data);
+        setop->adds = malloc(sizeof(char *) * setop->n_adds);
+        for (idx= 0; idx< limit; idx++) {
+          
           adds = (char *)va_arg(args, char *);
           setop->adds[idx].data = (unsigned char *)strdup(adds);
           setop->adds[idx].len = strlen(adds);

@@ -76,7 +76,7 @@ START_TEST (test_riack_setop_set_bulk)
 
   
   
-  riack_setop_free (setop);
+ 
   
   
 }
