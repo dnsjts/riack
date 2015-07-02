@@ -115,20 +115,21 @@ riack_message_t **
 riack_req_dt_update_set_bulk(va_list message_list, size_t limit)
 {
 riack_message_t **messages;
-int idx;
+size_t idx;
 int check;
 riack_dt_update_req_t *dtupdatereq;
+messages = malloc(sizeof(riack_message_t) * limit);
 va_list bulk;
 va_copy(bulk, message_list);
 for (idx =0; idx<limit; idx++) {
   dtupdatereq = riack_req_dt_update_new();
   if ((check = riack_req_dt_update_set (dtupdatereq, bulk)) == 0) {
     messages[idx] = riack_dtupdatereq_serialize(dtupdatereq);
-    riack_req_dt_update_free(dtupdatereq);
     }
+  riack_req_dt_update_free(dtupdatereq);
   }
-  //return 0;
-  return messages;
+  return 0;
+  //return messages;
 }
     
   
