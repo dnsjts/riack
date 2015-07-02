@@ -52,7 +52,7 @@ riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, ...)
   char *bucket_type;
   riack_dt_op_t *dtop;
   char *key;
-  size_t limit;
+
   
   
   va_start(args, dtupdatereq);
@@ -65,10 +65,6 @@ riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, ...)
   {
     
     switch (flag) {
-      case (RIACK_REQ_DT_UPDATE_FIELD_BULK):
-        limit = va_arg(args, int);
-        riack_req_dt_update_set_bulk(args, limit);
-        break;
       case (RIACK_REQ_DT_UPDATE_FIELD_BUCKET):
         bucket = (char *)va_arg(args, char *);
         if (dtupdatereq->bucket.data)
@@ -109,36 +105,7 @@ riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, ...)
   return -errno;
 }
 
-
-
-riack_message_t **     
-riack_req_dt_update_set_bulk(va_list message_list, size_t limit)
-{
-riack_message_t **messages;
-size_t idx;
-int check;
-riack_dt_update_req_t *dtupdatereq;
-messages = malloc(sizeof(riack_message_t) * limit);
-va_list bulk;
-va_copy(bulk, message_list);
-for (idx =0; idx<limit; idx++) {
-  dtupdatereq = riack_req_dt_update_new();
-  if ((check = riack_req_dt_update_set (dtupdatereq, bulk)) == 0) {
-    messages[idx] = riack_dtupdatereq_serialize(dtupdatereq);
-    }
-  riack_req_dt_update_free(dtupdatereq);
-  }
-  return 0;
-  //return messages;
-}
-    
-  
-  
-
-
-
-
-                            
+                           
 
 riack_message_t * 
 riack_dtupdatereq_serialize(riack_dt_update_req_t *dtupdatereq)

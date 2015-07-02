@@ -43,7 +43,8 @@ typedef enum
 {
   RIACK_SETOP_FIELD_NONE,
   RIACK_SETOP_FIELD_ADD,
-  RIACK_SETOP_FIELD_REMOVE
+  RIACK_SETOP_FIELD_REMOVE,
+  RIACK_SETOP_FIELD_BULK_ADD
 } riack_setop_field_t;
 
 riack_setop_t *riack_setop_new (void);

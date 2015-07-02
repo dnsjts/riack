@@ -51,7 +51,7 @@ typedef enum
     RIACK_REQ_DT_UPDATE_FIELD_BUCKET_TYPE,
     RIACK_REQ_DT_UPDATE_FIELD_KEY,
     RIACK_REQ_DT_UPDATE_FIELD_DT_OP,
-    RIACK_REQ_DT_UPDATE_FIELD_BULK,
+
   } riack_req_dt_update_field_t;
 
 
@@ -61,7 +61,7 @@ void riack_req_dt_update_free (riack_dt_update_req_t *dtupdatereq);
 int riack_req_dt_update_set (riack_dt_update_req_t *dtupdatereq, ...);
 
 riack_message_t * riack_dtupdatereq_serialize(riack_dt_update_req_t *dtupdatereq);
-riack_message_t **riack_req_dt_update_set_bulk(va_list message_list, size_t limit);
+
 //used to serialize the data that is to be sent to riak
 
 
