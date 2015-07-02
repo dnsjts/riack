@@ -46,7 +46,6 @@ riack_setop_set (riack_setop_t *setop, ...)
   char *adds;
   char *removes;
   int flag;
-  int limit;
   int idx;
   
   
@@ -60,18 +59,25 @@ riack_setop_set (riack_setop_t *setop, ...)
     
     switch (flag) {
       case (RIACK_SETOP_FIELD_BULK_ADD):
-        limit = va_arg(args, int);
-        setop->n_adds = limit;
-        for (idx =0;idx<limit;idx++)
-          if (setop->adds)
-            free(setop->adds[idx].data);
-        setop->adds = malloc(sizeof(char *) * setop->n_adds);
-        for (idx= 0; idx< limit; idx++) {
+        idx = va_arg(args, int);
+        //if (setop->adds[idx].data)
+            //free(setop->adds[idx].data);
+        
+        if(idx == 0) {
+           adds = (char *)va_arg(args, char *);
+           setop->adds = malloc(sizeof(adds));
+           }
+        else {
+        adds = (char *)va_arg(args, char *);
+        setop->adds = realloc(setop->adds, sizeof(adds) * (idx+1));
+        }
+        setop->n_adds = idx  + 1;
           
-          adds = (char *)va_arg(args, char *);
-          setop->adds[idx].data = (unsigned char *)strdup(adds);
-          setop->adds[idx].len = strlen(adds);
-          }
+       
+        
+        setop->adds[idx].data = (unsigned char *)strdup(adds);
+        setop->adds[idx].len = strlen(adds);
+          
         break;
         
       

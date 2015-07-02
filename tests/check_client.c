@@ -212,7 +212,90 @@ START_TEST (test_riack_client_send_dtupdatereq)
 }
 END_TEST
 
+START_TEST (test_riack_client_send_dtupdatereq_bulk)
+{
+  riack_client_t *client;
+  
+  riack_message_t *message;
 
+
+  client = riack_client_new ();
+
+  
+
+  if (network_tests_enabled ())
+    {
+      /* Connect with default options! */
+      
+      ck_assert_errno (riack_client_connect
+                       (client,
+                        RIACK_CONNECT_OPTION_HOST, "localhost",
+                        RIACK_CONNECT_OPTION_NONE), 0);
+       riack_dt_update_req_t *dtupdatereq;
+  riack_dt_op_t *dtop;
+  riack_setop_t *setop;
+  
+  dtupdatereq = riack_req_dt_update_new ();
+  dtop = riack_dt_op_new();
+  setop = riack_setop_new();
+      
+
+      ck_assert_errno
+        (riack_req_dt_update_set
+         (NULL, RIACK_REQ_DT_UPDATE_FIELD_NONE),
+         EINVAL);
+         
+      ck_assert_errno
+      (riack_setop_set (setop,
+                  RIACK_SETOP_FIELD_BULK_ADD, 0,
+                  "first bulk",
+                  RIACK_SETOP_FIELD_NONE),
+                  0);
+                  
+   ck_assert_errno
+      (riack_setop_set (setop,
+                  RIACK_SETOP_FIELD_BULK_ADD, 1,
+                  "second bulk",
+                  RIACK_SETOP_FIELD_NONE),
+                  0);
+                      
+      ck_assert_errno
+        (riack_dt_op_set (dtop,
+                    RIACK_DT_OP_FIELD_SETOP, setop,
+                    RIACK_DT_OP_FIELD_NONE),
+                    0);
+
+      ck_assert_errno
+        (riack_req_dt_update_set (dtupdatereq,
+                            RIACK_REQ_DT_UPDATE_FIELD_BUCKET, "setbucket", 
+                            RIACK_REQ_DT_UPDATE_FIELD_BUCKET_TYPE, "sets", 
+                        RIACK_REQ_DT_UPDATE_FIELD_KEY, "new key",
+                        RIACK_REQ_DT_UPDATE_FIELD_DT_OP, dtop,
+                        RIACK_REQ_DT_UPDATE_FIELD_NONE),
+     0);
+     
+   message = riack_dtupdatereq_serialize(dtupdatereq);
+      
+       ck_assert_errno
+            (riack_client_send (client,
+                                message),
+                                0);
+     ck_assert_errno
+            (riack_client_recv (client),
+                                0);                 
+                        
+      
+ 
+      //riack_req_dt_update_free (dtupdatereq);
+  
+      riack_client_disconnect (client);
+
+      
+    }
+
+  riack_client_free (client);
+}
+END_TEST
   
 
 
@@ -226,7 +309,7 @@ test_riack_client (void)
   tcase_add_test (test_client, test_riack_client_connect_and_disconnect);
   tcase_add_test (test_client, test_riack_client_send_putreq);
   tcase_add_test (test_client, test_riack_client_send_dtupdatereq);
-  //tcase_add_test (test_client, test_riack_client_send_dtupdatereq_bulk);
+  tcase_add_test (test_client, test_riack_client_send_dtupdatereq_bulk);
 
   return test_client;
 }

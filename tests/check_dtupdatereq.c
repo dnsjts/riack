@@ -87,8 +87,14 @@ START_TEST (test_riack_req_dt_update_set_bulk)
 
     ck_assert_errno
       (riack_setop_set (setop,
-                  RIACK_SETOP_FIELD_BULK_ADD, 2,
+                  RIACK_SETOP_FIELD_BULK_ADD, 0,
                   "first bulk",
+                  RIACK_SETOP_FIELD_NONE),
+                  0);
+                  
+   ck_assert_errno
+      (riack_setop_set (setop,
+                  RIACK_SETOP_FIELD_BULK_ADD, 1,
                   "second bulk",
                   RIACK_SETOP_FIELD_NONE),
                   0);
@@ -117,7 +123,7 @@ START_TEST (test_riack_req_dt_update_set_bulk)
  
 
   
-  riack_req_dt_update_free (dtupdatereq);
+  //riack_req_dt_update_free (dtupdatereq);
   
   
   
@@ -132,7 +138,7 @@ test_riack_dtupdatereq (void)
   test_dtupdatereq = tcase_create ("dtupdate");
   tcase_add_test (test_dtupdatereq, test_riack_dtupdatereq_new_and_free);
   tcase_add_test (test_dtupdatereq, test_riack_req_dt_update_set);
-  //tcase_add_test (test_dtupdatereq, test_riack_req_dt_update_set_bulk);
+  tcase_add_test (test_dtupdatereq, test_riack_req_dt_update_set_bulk);
 
   return test_dtupdatereq;
 }
