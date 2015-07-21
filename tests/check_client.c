@@ -286,7 +286,7 @@ START_TEST (test_riack_client_send_dtupdatereq_bulk)
                         
       
  
-      //riack_req_dt_update_free (dtupdatereq);
+      riack_req_dt_update_free (dtupdatereq);
   
       riack_client_disconnect (client);
 

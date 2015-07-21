@@ -123,7 +123,7 @@ START_TEST (test_riack_req_dt_update_set_bulk)
  
 
   
-  //riack_req_dt_update_free (dtupdatereq);
+  riack_req_dt_update_free (dtupdatereq);
   
   
   

@@ -66,24 +66,20 @@ START_TEST (test_riack_setop_set_bulk)
                   "first bulk",
                   RIACK_SETOP_FIELD_NONE),
                   0);
-                  
+                    
    ck_assert_errno
       (riack_setop_set (setop,
                   RIACK_SETOP_FIELD_BULK_ADD, 1,
                   "second bulk",
                   RIACK_SETOP_FIELD_NONE),
                   0);
-                  
-  
-   ck_assert_str_eq (setop->adds[0].data, "first bulk");
-   ck_assert_str_eq (setop->adds[1].data, "second bulk");
+
 
   
  
 
   
-  
-  //riack_setop_free (setop);
+  riack_setop_free (setop);
   
   
 }

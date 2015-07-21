@@ -34,7 +34,11 @@ riack_setop_new (void)
 void 
 riack_setop_free (riack_setop_t *setop)
 {
-  set_op__free_unpacked(setop,NULL);
+  if (setop !=NULL) {
+    set_op__free_unpacked(setop,NULL);
+    setop = NULL;
+    }
+  
 }
 
 
@@ -44,9 +48,11 @@ riack_setop_set (riack_setop_t *setop, ...)
 
   va_list args;
   char *adds;
+  
   char *removes;
   int flag;
   int idx;
+ 
   
   
   if (setop == NULL)
@@ -63,19 +69,24 @@ riack_setop_set (riack_setop_t *setop, ...)
         //if (setop->adds[idx].data)
             //free(setop->adds[idx].data);
         
-        if(idx == 0) {
-           adds = (char *)va_arg(args, char *);
-           setop->adds = malloc(sizeof(adds));
-           }
-        else {
-        adds = (char *)va_arg(args, char *);
-        setop->adds = realloc(setop->adds, sizeof(adds) * (idx+1));
-        }
+        if(idx == 0)
+           setop->adds = malloc(sizeof(ProtobufCBinaryData));
+        else
+          setop->adds = realloc(setop->adds, sizeof(ProtobufCBinaryData) * (idx+1));
+
         setop->n_adds = idx  + 1;
-          
-       
+        adds = (char *)va_arg(args, char *);
         
+        //printf("%s\n", adds);
+        //printf("%zu\n", strlen(adds));
+        while(adds[strlen(adds)]!='\0')
+        {
+        }
+
+        //adds[strlen(adds)] = '\0';
+        setop->adds[idx].data = NULL;
         setop->adds[idx].data = (unsigned char *)strdup(adds);
+
         setop->adds[idx].len = strlen(adds);
           
         break;
@@ -89,7 +100,7 @@ riack_setop_set (riack_setop_t *setop, ...)
         adds = (char *)va_arg(args, char *);
         if (adds) {
           setop->n_adds = 1;
-          setop->adds = malloc(sizeof(adds));
+          setop->adds = malloc(sizeof(ProtobufCBinaryData));
           setop->adds[0].data = (unsigned char *)strdup(adds);
           setop->adds[0].len = strlen(adds);
           }
@@ -103,7 +114,7 @@ riack_setop_set (riack_setop_t *setop, ...)
         removes = (char *)va_arg(args, char *);
         if (removes) {
           setop->n_removes = 1;
-          setop->removes = malloc(sizeof(adds));
+          setop->removes = malloc(sizeof(ProtobufCBinaryData));
           setop->removes[0].data = (unsigned char *)strdup(removes);
           setop->removes[0].len = strlen(removes);
           }
