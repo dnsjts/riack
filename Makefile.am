@@ -1,27 +1,9 @@
 # -- Global settings --
-AM_MAKEFLAGS			= --no-print-directory
-AM_CFLAGS			= -I${top_srcdir}/lib -I${top_builddir}/lib
-ACLOCAL_AMFLAGS			= -Im4
+DIST_SUBDIRS = ext/riak_pb
 
-LDADD				= lib/libriack.la
+noinst_LTLIBRARIES				= \
+	lib/libriack.la
 
-pkgincludedir			= ${includedir}/riack
-protodir			= ${pkgincludedir}/proto
-
-VERSION				= @VERSION@${SNAPSHOT_VERSION}
-
-# -- Libraries --
-LRC_CURRENT			= 0
-LRC_REVISION			= 0
-LRC_AGE				= 0
-
-lib_LTLIBRARIES			= lib/libriack.la
-
-lib_libriack_CFLAGS		= ${AM_CFLAGS} ${PROTOBUF_C_CFLAGS}
-lib_libriack_la_LDFLAGS		= \
-	${PROTOBUF_C_LIBS}	  \
-	${GNUTLS_LIBS}		  \
-	-version-info ${LRC_CURRENT}:${LRC_REVISION}:${LRC_AGE}
 riak_proto_files		= \
 	lib/riack/proto/riak.pb-c.c  \
 	lib/riack/proto/riak.pb-c.h
@@ -31,11 +13,13 @@ riak_kv_proto_files		= \
 riak_dt_proto_files		= \
 	lib/riack/proto/riak_dt.pb-c.c  \
 	lib/riack/proto/riak_dt.pb-c.h
-nodist_proto_HEADERS		= \
+noinst_HEADERS		= \
 	lib/riack/proto/riak.pb-c.h \
 	lib/riack/proto/riak_kv.pb-c.h  \
-	lib/riack/proto/riak_dt.pb-c.h
-pkginclude_HEADERS		= \
+	lib/riack/proto/riak_dt.pb-c.h \
+	lib/riack/_private.h
+
+lib_libriack_la_SOURCES	= \
 	lib/riack/client.h	  \
 	lib/riack/content.h	  \
 	lib/riack/riack.h   \
@@ -43,59 +27,56 @@ pkginclude_HEADERS		= \
 	lib/riack/message.h \
 	lib/riack/dtupdatereq.h \
 	lib/riack/dtop.h \
-	lib/riack/setop.h 
-lib_libriack_la_SOURCES		= \
+	lib/riack/setop.h \
 	lib/riack/client.c	  \
 	lib/riack/content.c    \
 	lib/riack/putreq.c  \
 	lib/riack/dtupdatereq.c  \
 	lib/riack/dtop.c  \
-	lib/riack/setop.c  
-$(am_lib_libriack_la_OBJECTS): ${riak_proto_files} ${riak_kv_proto_files} ${riak_dt_proto_files}
-noinst_HEADERS			= \
-	lib/riack/_private.h
-
-nodist_lib_libriack_la_SOURCES	= \
+	lib/riack/setop.c \
 	${riak_proto_files} ${riak_kv_proto_files} ${riak_dt_proto_files}
+
+lib_libriack_la_CFLAGS	 =  \
+	-I$(top_srcdir)/lib   \
+	-I$(top_builddir)/lib \
+	${PROTOBUF_C_CFLAGS}
+lib_libriack_la_LDFLAGS    = \
+	${PROTOBUF_C_LIBS}
+
+$(am_lib_libriack_la_OBJECTS): ${riak_proto_files} ${riak_kv_proto_files} ${riak_dt_proto_files}
 
 CLEANFILES			= ${riak_proto_files} ${riak_kv_proto_files} ${riak_dt_proto_files}
 
-${riak_proto_files}: ${top_srcdir}/ext/riak_pb/src/riak.proto
-	${AM_V_at} ${mkinstalldirs} ${top_builddir}/lib/riack/proto
-	${AM_V_GEN} protoc-c $^ -I${top_srcdir}/ext/riak_pb/src --c_out=${top_builddir}/lib/riack/proto
+proto_dir = ext/riak_pb/src
+proto_dest_dir = lib/riack/proto
 
-${riak_kv_proto_files}: ${top_srcdir}/ext/riak_pb/src/riak_kv.proto
-	${AM_V_at} ${mkinstalldirs} ${top_builddir}/lib/riack/proto
-	${AM_V_GEN} protoc-c $^ -I${top_srcdir}/ext/riak_pb/src --c_out=${top_builddir}/lib/riack/proto
-	
-${riak_dt_proto_files}: ${top_srcdir}/ext/riak_pb/src/riak_dt.proto
-	${AM_V_at} ${mkinstalldirs} ${top_builddir}/lib/riack/proto
-	${AM_V_GEN} protoc-c $^ -I${top_srcdir}/ext/riak_pb/src --c_out=${top_builddir}/lib/riack/proto
+${riak_proto_files}: ${top_srcdir}/${proto_dir}/riak.proto
+	${AM_V_at} ${mkinstalldirs} ${top_builddir}/${proto_dest_dir}
+	${AM_V_GEN} protoc-c $^ -I${top_srcdir}/${proto_dir} --c_out=${top_builddir}/${proto_dest_dir}
 
-if HAVE_VERSIONING
-lib_libriack_la_LDFLAGS		+= \
-	-Wl,--version-script,$(top_srcdir)/lib/riack/libriack.ver
-lib_libriack_la_DEPENDENCIES	= ${top_srcdir}/lib/riack/libriack.ver
-endif
+${riak_kv_proto_files}: ${top_srcdir}/${proto_dir}/riak_kv.proto
+	${AM_V_at} ${mkinstalldirs} ${top_builddir}/${proto_dest_dir}
+	${AM_V_GEN} protoc-c $^ -I${top_srcdir}/${proto_dir} --c_out=${top_builddir}/${proto_dest_dir}
 
-pkgconfigdir			= $(libdir)/pkgconfig
-pkgconfig_DATA			= lib/riack/riack.pc
+${riak_dt_proto_files}: ${top_srcdir}/${proto_dir}/riak_dt.proto
+	${AM_V_at} ${mkinstalldirs} ${top_builddir}/${proto_dest_dir}
+	${AM_V_GEN} protoc-c $^ -I${top_srcdir}/${proto_dir} --c_out=${top_builddir}/${proto_dest_dir}
 
 # -- Testcases --
 if HAVE_CHECK
-UNIT_TESTS			= tests/check_libriack
-TESTS				= ${UNIT_TESTS}
+tests_TESTS = tests/check_libriack
 
-tests/check_%: CFLAGS += ${CHECK_CFLAGS}
-tests/check_%: LDADD += ${CHECK_LIBS} -ldl
+tests/check_%: CFLAGS += ${CHECK_CFLAGS} \
+	${lib_libriack_la_CFLAGS}
+tests/check_%: LDADD += ${CHECK_LIBS} -ldl \
+	lib/libriack.la ${PROTOBUF_C_LIBS}
 tests/check_%: LDFLAGS += -no-install
 
-check_PROGRAMS			= ${TESTS}
+check_PROGRAMS = ${tests_TESTS}
 endif
 
 check_libriack_srcs		= \
 	tests/tests.h		  \
-	tests/check_library.c	  \
 	tests/check_client.c	  \
 	tests/check_content.c	  \
 	tests/check_libriack.c    \
@@ -105,32 +86,5 @@ check_libriack_srcs		= \
 	tests/check_dtop.c
 
 # -- Extra files to distribute --
-EXTRA_DIST			= README.md NEWS.md GPL LGPL \
-				  ext/ \
-				  lib/riack/libriack.ver \
-				  lib/riack/riack.pc \
+EXTRA_DIST			= ext/ \
 				  ${check_libriack_srcs}
-
-# -- Custom targets --
-coverage: coverage.info.html
-
-coverage.info.html: coverage.info
-	$(AM_V_GEN)genhtml --quiet $^ --output-directory $@
-
-coverage.info: check
-	$(AM_V_GEN)lcov --quiet --capture --directory ${top_builddir}/lib --output $@ -b ${top_builddir} && \
-		   lcov --quiet --remove $@ '*/lib/riack/proto/*' -o $@
-
-.PHONY: coverage
-CLEANFILES			+= coverage.info
-
-clean-local:
-	rm -rf coverage.info.html
-	find ${top_builddir} -name '*.gcda' -or -name '*.gcno' | xargs rm -f
-
-docs/html: Doxyfile $(pkginclude_HEADERS)
-	$(AM_V_GEN)doxygen
-
-doxygen: docs/html
-
-.PHONY: doxygen

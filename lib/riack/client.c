@@ -16,7 +16,6 @@
  * License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "riack/platform.h"
 #include <riack/client.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,26 +29,13 @@
 #include <stdarg.h>
 #include <arpa/inet.h>
 
-const char *
-riack_version (void)
-{
-  return PACKAGE_VERSION;
-}
-
-const char *
-riack_version_string (void)
-{
-  return PACKAGE_STRING;
-}
-
 riack_client_t *
 riack_client_new (void)
 {
   riack_client_t *client = (riack_client_t *)malloc(sizeof(riack_client_t));
-  client->conn = 0;
+  client->fd = -1;
 
   return client;
-
 }
 
 int
@@ -57,13 +43,15 @@ riack_client_free (riack_client_t *client)
 {
   if (client == NULL)
     return -EINVAL;
-  if (!client->conn ) {
-    free(client);
-    return -ENOTCONN;
+  if (client->fd == -1 )
+    {
+      free(client);
+      return -ENOTCONN;
     }
-  else {
-    free(client);
-    return 0;
+  else
+    {
+      free(client);
+      return 0;
     }
 }
 
@@ -72,61 +60,70 @@ riack_client_connect (riack_client_t *client, ...)
 {
   int err_check, flag;
   va_list args;
-  char *hostname;
-  char port[5];
+  char *hostname = "127.0.0.1";
+  char *hostname_copy;
+  char *port = "8087";
+  char *port_copy;
+  int port_num;
   struct addrinfo server, *serverinfo, *p;
   memset(&server, 0, sizeof(server));
   server.ai_family = AF_UNSPEC;
   server.ai_socktype = SOCK_STREAM;
   va_start(args, client);
-  while ( (flag = va_arg(args, int)) != 0)
-  {
-    if (flag == RIACK_CONNECT_OPTION_HOST) {
-      hostname = (char *)va_arg(args, char *);
-      if ((err_check = getaddrinfo(hostname, "8087", &server, &serverinfo)) != 0) {
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err_check));
-        return -EINVAL;
-       }
-    }
-    else if (flag == RIACK_CONNECT_OPTION_PORT) {
-      sprintf(port, "%d", va_arg(args, int));
-      if ((err_check = getaddrinfo("127.0.0.1", port, &server, &serverinfo)) != 0) {
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err_check));
-        return -EINVAL;
+  while ((flag = va_arg(args, int)) != RIACK_CONNECT_OPTION_NONE)
+    {
+      if (flag == RIACK_CONNECT_OPTION_HOST)
+        {
+        hostname_copy = (char *)va_arg(args, char *);
+        //free(hostname);
+        hostname = strdup(hostname_copy);
         }
-     }
-   }
-  if (flag == RIACK_CONNECT_OPTION_NONE) {
-    if ((err_check = getaddrinfo("127.0.0.1", "8087", &server, &serverinfo)) != 0) {
-    fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err_check));
-    return -errno;
+        
+      else if (flag == RIACK_CONNECT_OPTION_PORT)
+        {
+          port_copy = (char *) malloc(sizeof(char *));
+          port_num = va_arg(args, int);
+          sprintf(port_copy, "%d", port_num);
+          //free(port);
+          port = strdup(port_copy);
+          free(port_copy);
+        }
     }
-  }
-  // looping through all the results and connect to the first we can
-  for(p = serverinfo; p != NULL; p = p->ai_next) {
-    if ((client->fd = socket(p->ai_family, p->ai_socktype,
-            p->ai_protocol)) == -1) {
-        perror("socket");
-        continue;
+    
+  if ((err_check = getaddrinfo(hostname, port, &server, &serverinfo)) != 0)
+    {
+      fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err_check));
+      freeaddrinfo(serverinfo);
+      return -errno;
+    }
+    // looping through all the results and connect to the first we can
+  for(p=serverinfo; p!= NULL; p=p->ai_next)
+    {
+      if ((client->fd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1)
+        {
+          perror("socket");
+          continue;
+        }
+
+      if (connect(client->fd, p->ai_addr, p->ai_addrlen) == -1)
+        {
+          close(client->fd);
+          perror("connect");
+          continue;
+        }
+      break; // if we get here, we must have connected successfully
     }
 
-    if (connect(client->fd, p->ai_addr, p->ai_addrlen) == -1) {
-        close(client->fd);
-        perror("connect");
-        continue;
-    }
-    client->conn =1;
-    break; // if we get here, we must have connected successfully
-  }
-
-  if (p == NULL) {
+  if (p == NULL)
+    {
     // looped off the end of the list with no connection
-    fprintf(stderr, "failed to connect\n");
-    return -errno;
-  }
-  return 0;
-  freeaddrinfo(serverinfo); // all done with this structure
+      fprintf(stderr, "failed to connect\n");
+      freeaddrinfo(serverinfo); // all done with this structure
+      return -errno;
+    }
   
+  freeaddrinfo(serverinfo); // all done with this structure
+  return 0;
 }
 
 
@@ -135,19 +132,16 @@ int
 riack_client_disconnect (riack_client_t *client)
 {
   int rval;
-  if (client== NULL || client->conn == 0)
+  if (client== NULL || client->fd == -1)
     return -ENOTCONN;
 
-
-  if((rval=shutdown(client->fd, 2)) !=0) {
-    
-    return -errno;
+  if((rval=shutdown(client->fd, 2)) !=0)
+      return -errno;
+  else
+    {
+      return rval;
+      client->fd = -1;
     }
-  else {
-    return rval;
-    client->conn = 0;
-  }
-  
 }
 
 
@@ -159,16 +153,26 @@ riack_client_send (riack_client_t *client, riack_message_t *message)
   length = ntohl(message->length);
   length -= 1;
   
-  if ((scheck = send(client->fd, message, length + sizeof (message->length) + sizeof (message->message_code), 0))  == -1) {
-    free(message);
-    return -errno;
-  }
-    else {
+  if ((scheck = send(client->fd, message, length + sizeof (message->length) + sizeof (message->message_code), 0))  == -1)
+    {
+      free(message);
+      return -errno;
+    }
+  else
+    {
       free(message);
       return 0;
-      }
+    }
 }
 
+int
+riack_client_is_connected(riack_client_t *client)
+{
+  if (client->fd == -1)
+    return 0;
+  else
+    return 1;
+}
   
 int
 riack_client_recv(riack_client_t *client)
@@ -179,29 +183,31 @@ riack_client_recv(riack_client_t *client)
   void *result_msg;
   //Receive response length 
   n = recv(client->fd, &len, 4, MSG_WAITALL);
-  if (n != 4) {
+  if (n != 4)
     return -errno;
-	}
 
   len = htonl(len);
   
   //Receive message code 
   n = recv(client->fd, &msgcode, 1, MSG_WAITALL);
-  if (n != 1) {
+  if (n != 1)
 	return -errno;
-	}
-  if (msgcode != 0) {
+	
+  if (msgcode != 0) 
+    {
 	//Receive additional data, if such exists.
-	if (len>1) {
-	  result_msg = malloc(len-1);
-	  n = recv(client->fd, result_msg, len-1, MSG_WAITALL);
-	  if ((unsigned)n != len-1) {
-	    free(result_msg);
-	    return -errno;
-		}
-	free(result_msg);
-	return 0;
-	  }
+	  if (len>1)
+	    {
+	      result_msg = malloc(len-1);
+	      n = recv(client->fd, result_msg, len-1, MSG_WAITALL);
+	      if ((unsigned)n != len-1)
+	        {
+	          free(result_msg);
+	          return -errno;
+		    }
+	      free(result_msg);
+	      return 0;
+	    }
     }
-    return -errno;
+  return -errno;
 }
