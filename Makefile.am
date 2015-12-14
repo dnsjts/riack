@@ -1,5 +1,4 @@
 # -- Global settings --
-DIST_SUBDIRS = ext/riak_pb
 
 noinst_LTLIBRARIES				= \
 	lib/libriack.la
@@ -19,7 +18,7 @@ noinst_HEADERS		= \
 	lib/riack/proto/riak_dt.pb-c.h \
 	lib/riack/_private.h
 
-lib_libriack_la_SOURCES	= \
+dist_lib_libriack_la_SOURCES	= \
 	lib/riack/client.h	  \
 	lib/riack/content.h	  \
 	lib/riack/riack.h   \
@@ -33,8 +32,11 @@ lib_libriack_la_SOURCES	= \
 	lib/riack/putreq.c  \
 	lib/riack/dtupdatereq.c  \
 	lib/riack/dtop.c  \
-	lib/riack/setop.c \
-	${riak_proto_files} ${riak_kv_proto_files} ${riak_dt_proto_files}
+	lib/riack/setop.c
+nodist_lib_libriack_la_SOURCES =  \
+     ${riak_proto_files}    \
+     ${riak_kv_proto_files} \
+     ${riak_dt_proto_files}
 
 lib_libriack_la_CFLAGS	 =  \
 	-I$(top_srcdir)/lib   \
@@ -42,13 +44,6 @@ lib_libriack_la_CFLAGS	 =  \
 	${PROTOBUF_C_CFLAGS}
 lib_libriack_la_LDFLAGS    = \
 	${PROTOBUF_C_LIBS}
-
-$(am_lib_libriack_la_OBJECTS): ${riak_proto_files} ${riak_kv_proto_files} ${riak_dt_proto_files}
-
-CLEANFILES			= ${riak_proto_files} ${riak_kv_proto_files} ${riak_dt_proto_files}
-
-proto_dir = ext/riak_pb/src
-proto_dest_dir = lib/riack/proto
 
 ${riak_proto_files}: ${top_srcdir}/${proto_dir}/riak.proto
 	${AM_V_at} ${mkinstalldirs} ${top_builddir}/${proto_dest_dir}
@@ -61,6 +56,13 @@ ${riak_kv_proto_files}: ${top_srcdir}/${proto_dir}/riak_kv.proto
 ${riak_dt_proto_files}: ${top_srcdir}/${proto_dir}/riak_dt.proto
 	${AM_V_at} ${mkinstalldirs} ${top_builddir}/${proto_dest_dir}
 	${AM_V_GEN} protoc-c $^ -I${top_srcdir}/${proto_dir} --c_out=${top_builddir}/${proto_dest_dir}
+
+$(lib_libriack_la_OBJECTS): ${riak_proto_files} ${riak_kv_proto_files} ${riak_dt_proto_files}
+
+CLEANFILES			= ${riak_proto_files} ${riak_kv_proto_files} ${riak_dt_proto_files}
+
+proto_dir = ext/riak_pb/src
+proto_dest_dir = lib/riack/proto
 
 # -- Testcases --
 if HAVE_CHECK
@@ -75,16 +77,15 @@ tests/check_%: LDFLAGS += -no-install
 check_PROGRAMS = ${tests_TESTS}
 endif
 
-check_libriack_srcs		= \
-	tests/tests.h		  \
-	tests/check_client.c	  \
-	tests/check_content.c	  \
-	tests/check_libriack.c    \
-	tests/check_putreq.c    \
-	tests/check_dtupdatereq.c   \
-	tests/check_setop.c \
-	tests/check_dtop.c
+check_libriack_srcs = tests/tests.h             \
+					  tests/check_client.c      \
+					  tests/check_content.c     \
+					  tests/check_libriack.c    \
+					  tests/check_putreq.c      \
+					  tests/check_dtupdatereq.c \
+					  tests/check_setop.c       \
+					  tests/check_dtop.c
 
 # -- Extra files to distribute --
-EXTRA_DIST			= ext/ \
-				  ${check_libriack_srcs}
+EXTRA_DIST = ext \
+			 ${check_libriack_srcs}

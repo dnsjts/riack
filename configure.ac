@@ -80,8 +80,6 @@ AC_DEFINE_UNQUOTED(HAVE_VERSIONING, `enable_value ${ac_cv_prog_ld_version_script
                    [Define to 1 if symbol versioning is enabled])
 
 AM_CONDITIONAL([HAVE_CHECK], [test x$HAVE_CHECK != xno])
-AC_CONFIG_FILES([
-Makefile
-                 ])
+AC_CONFIG_FILES([Makefile])
 
 AC_OUTPUT
