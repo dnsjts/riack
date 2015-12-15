@@ -16,7 +16,6 @@ The library uses [semantic versioning][semver].
 Features
 --------
 
-... todo ...
 
 Demo
 ----
