@@ -1,8 +1,8 @@
 Riak C client library
 =====================
 
-[![Build Status](https://img.shields.io/travis/algernon/riack/master.svg?style=flat-square)](https://travis-ci.org/algernon/riack)
-[![Coverage Status](https://coveralls.io/repos/algernon/riack/badge.svg?style=flat-square)](https://coveralls.io/r/algernon/riack)
+[![Build Status](https://img.shields.io/travis/dnsjts/riack/master.svg?style=flat-square)](https://travis-ci.org/algernon/riack)
+[![Coverage Status](https://coveralls.io/repos/dnsjts/riack/badge.svg?style=flat-square)](https://coveralls.io/r/algernon/riack)
 
 This is a C client library for the [Riak][riak] distributed NoSQL
 database.
