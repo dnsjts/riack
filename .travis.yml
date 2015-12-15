@@ -9,7 +9,7 @@ install:
   - sudo riak-admin bucket-type create sets '{"props":{"datatype":"set"}}'
   - sudo riak-admin bucket-type activate sets 
 before_script:
-  - autoreconf -i
+  - ./autogen.sh
 script:
   - ./configure --enable-silent-rules CFLAGS="-Wall -Wextra -O0 -g -pg  -fprofile-arcs -ftest-coverage" LDFLAGS="-pg"
   - make
